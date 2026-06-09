@@ -1,7 +1,8 @@
 # Task 05 — Phase 1 Strategy Engine
 
 > **Estimated time**: 3-4 days
-> **Dependencies**: Task 04 (stock data service), Task 03 (auth)
+> **依赖 (Depends On)**: T04 — 股票数据服务, T03 — 认证系统
+> **被依赖 (Required By)**: T06 — 策略引擎, T07 — 策略引擎, T08 — 策略引擎, T09 — 策略引擎, T10 — 策略引擎
 > **Status**: Not started
 > **参考设计文档**:
 > - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构

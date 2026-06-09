@@ -1,7 +1,8 @@
 # Task 08 — Phase 1 AI Analysis
 
 > **Estimated time**: 2-3 days
-> **Dependencies**: Task 05 (signals), Task 06 (scheduler for the job that triggers it)
+> **依赖 (Depends On)**: T05 — 信号数据, T06 — 调度器触发
+> **被依赖 (Required By)**: T09 — 提醒邮件, T10 — 管理端前端
 > **Status**: Not started
 > **参考设计文档**:
 > - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构

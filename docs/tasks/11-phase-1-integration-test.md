@@ -2,7 +2,8 @@
 
 > **Status**: Ready for Implementation
 > **Estimated Time**: 2-3 days
-> **Dependencies**: Tasks 01-10 complete. All APIs operational, all services implemented.
+> **依赖 (Depends On)**: T01-T10 — 全部模块
+> **被依赖 (Required By)**: 无 (terminal task)
 > **Prerequisites**: 
 > - `backend/` with all modules (auth, stocks, strategies, backtest, AI, alerts, scheduler)
 > - `docker-compose up -d mysql redis` running (or SQLite :memory: fallback for CI)

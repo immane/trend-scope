@@ -2,8 +2,8 @@
 
 > **Status**: Ready for Implementation
 > **Estimated Time**: 2-3 days
-> **Dependencies**: Task 01 (project initialized, Docker services running)
-> **Required By**: Task 03, Task 04
+> **依赖 (Depends On)**: T01 — 项目初始化
+> **被依赖 (Required By)**: T03 — 数据库层, T04 — 数据库层, T05 — 数据库层, T07 — 数据库层, T08 — 数据库层, T09 — 数据库层
 > **参考设计文档**:
 > - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构
 > - [phase-1.md](../design/phase-1.md) — Phase 1 MVP 详细设计

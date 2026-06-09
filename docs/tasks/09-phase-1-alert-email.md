@@ -1,7 +1,8 @@
 # Task 09 — Phase 1 Alert & Email System
 
 > **Estimated time**: 2-3 days
-> **Dependencies**: Task 08 (AI analysis for email content), Task 05 (signals), Task 06 (scheduler job dispatch_alerts calls match_and_send), Task 02 (AlertRule/AlertLog models), Task 01 (RESEND_API_KEY in settings)
+> **依赖 (Depends On)**: T08 — AI分析(邮件内容), T05 — 信号数据, T06 — 调度器触发, T02 — 数据库模型
+> **被依赖 (Required By)**: T10 — 管理端前端
 > **Status**: Not started
 > **参考设计文档**:
 > - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构

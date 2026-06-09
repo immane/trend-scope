@@ -2,9 +2,8 @@
 
 > **Status**: Ready for Implementation
 > **Estimated Time**: 2-3 days
-> **Dependencies**: None (this is the first task)
-> **Depends On**: -
-> **Required By**: Task 02, Task 03, Task 04
+> **依赖 (Depends On)**: 无 (this is the first task)
+> **被依赖 (Required By)**: T02 — 项目骨架, T03 — 项目骨架, T04 — 项目骨架, T10 — 项目骨架
 > **参考设计文档**:
 > - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构
 > - [phase-1.md](../design/phase-1.md) — Phase 1 MVP 详细设计

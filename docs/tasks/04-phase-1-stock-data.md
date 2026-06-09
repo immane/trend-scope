@@ -2,9 +2,8 @@
 
 > **Status**: Ready for Implementation
 > **Estimated Time**: 2-3 days
-> **Dependencies**: Task 02 (DB models + get_db), Task 03 (auth guards for admin endpoints)
-> **Depends On**: Task 02, Task 03
-> **Required By**: Task 05 (strategy system needs stock data), Task 07 (backtest needs price data), admin frontend tasks
+> **依赖 (Depends On)**: T02 — 数据库层, T03 — 认证系统
+> **被依赖 (Required By)**: T05 — 股票数据, T07 — 股票数据, T10 — 股票数据
 > **参考设计文档**:
 > - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构
 > - [phase-1.md](../design/phase-1.md) — Phase 1 MVP 详细设计

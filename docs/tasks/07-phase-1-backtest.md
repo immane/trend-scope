@@ -1,7 +1,8 @@
 # Task 07 — Phase 1 Backtest System
 
 > **Estimated time**: 2-3 days
-> **Dependencies**: Task 05 (analysis engine for `generate_signals`), Task 04 (stock data)
+> **依赖 (Depends On)**: T05 — 策略引擎(generate_signals), T04 — 股票数据
+> **被依赖 (Required By)**: T10 — 管理端前端
 > **Status**: Not started
 > **参考设计文档**:
 > - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构

@@ -1,7 +1,8 @@
 # Task 06 — Phase 1 Scheduler
 
 > **Estimated time**: 1-2 days
-> **Dependencies**: Task 05 (SignalEngine), Task 04 (DataService). Task 08 (AI analysis) and Task 09 (alerts) are stubbed.
+> **依赖 (Depends On)**: T05 — 策略引擎, T04 — 数据服务
+> **被依赖 (Required By)**: T08 — 调度器, T09 — 调度器
 > **Status**: Not started
 > **参考设计文档**:
 > - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构

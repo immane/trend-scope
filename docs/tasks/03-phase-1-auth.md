@@ -2,9 +2,8 @@
 
 > **Status**: Ready for Implementation
 > **Estimated Time**: 2-3 days
-> **Dependencies**: Task 02 (DB models must exist)
-> **Depends On**: Task 02
-> **Required By**: Task 04 (stock APIs need auth guards)
+> **依赖 (Depends On)**: T02 — 数据库层
+> **被依赖 (Required By)**: T04 — 认证系统, T05 — 认证系统, T07 — 认证系统, T08 — 认证系统, T09 — 认证系统, T10 — 认证系统, T11 — 认证系统
 > **参考设计文档**:
 > - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构
 > - [phase-1.md](../design/phase-1.md) — Phase 1 MVP 详细设计

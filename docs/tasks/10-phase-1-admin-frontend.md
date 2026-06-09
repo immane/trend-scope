@@ -2,9 +2,8 @@
 
 > **Status**: Ready for Implementation
 > **Estimated Time**: 4-5 days
-> **Dependencies**: Task 01 (project init / admin scaffold exists), Task 03 (auth API running), Task 04 (stock/Kline API running), Task 05 (strategy/signal API running), Task 07 (backtest API running), Task 08 (AI analysis API running), Task 09 (alert API running)
-> **Depends On**: Task 01, 03, 04, 05, 07, 08, 09
-> **Required By**: Task 11 (integration tests)
+> **依赖 (Depends On)**: T01 — 项目骨架, T03 — 认证API, T04 — 股票API, T05 — 策略API, T07 — 回测API, T08 — AI分析API, T09 — 提醒API
+> **被依赖 (Required By)**: T11 — 集成测试
 > **参考设计文档**:
 > - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构
 > - [phase-1.md](../design/phase-1.md) — Phase 1 MVP 详细设计
