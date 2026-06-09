@@ -4,6 +4,10 @@
 > **Estimated Time**: 2-3 days
 > **Dependencies**: Task 01 (project initialized, Docker services running)
 > **Required By**: Task 03, Task 04
+> **参考设计文档**:
+> - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构
+> - [phase-1.md](../design/phase-1.md) — Phase 1 MVP 详细设计
+> - [002-database-schema.md](../design/002-database-schema.md) — 完整DDL
 
 ---
 

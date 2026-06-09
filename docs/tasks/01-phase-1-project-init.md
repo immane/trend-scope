@@ -5,6 +5,10 @@
 > **Dependencies**: None (this is the first task)
 > **Depends On**: -
 > **Required By**: Task 02, Task 03, Task 04
+> **参考设计文档**:
+> - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构
+> - [phase-1.md](../design/phase-1.md) — Phase 1 MVP 详细设计
+> - [010-deployment-guide.md](../design/010-deployment-guide.md) — 部署指南
 
 ---
 

@@ -3,6 +3,12 @@
 > **Estimated time**: 2-3 days
 > **Dependencies**: Task 05 (analysis engine for `generate_signals`), Task 04 (stock data)
 > **Status**: Not started
+> **参考设计文档**:
+> - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构
+> - [phase-1.md](../design/phase-1.md) — Phase 1 MVP 详细设计
+> - [003-api-specification.md](../design/003-api-specification.md) — API规格
+> - [007-backtest-system.md](../design/007-backtest-system.md) — 回测系统设计
+> - [006-backtest.md](../research/006-backtest.md) — 回测研究
 
 ---
 

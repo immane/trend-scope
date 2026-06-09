@@ -3,6 +3,9 @@
 > **Estimated time**: 1-2 days
 > **Dependencies**: Task 05 (SignalEngine), Task 04 (DataService). Task 08 (AI analysis) and Task 09 (alerts) are stubbed.
 > **Status**: Not started
+> **参考设计文档**:
+> - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构
+> - [phase-1.md](../design/phase-1.md) — Phase 1 MVP 详细设计
 
 ---
 

@@ -8,6 +8,9 @@
 > - `docker-compose up -d mysql redis` running (or SQLite :memory: fallback for CI)
 > - Alembic migrations applied (`alembic upgrade head`)
 > - pytest, pytest-asyncio, httpx installed (already in `requirements.txt`)
+> **参考设计文档**:
+> - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构
+> - [phase-1.md](../design/phase-1.md) — Phase 1 MVP 详细设计
 
 ---
 

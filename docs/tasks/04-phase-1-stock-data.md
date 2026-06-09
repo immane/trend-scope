@@ -5,6 +5,11 @@
 > **Dependencies**: Task 02 (DB models + get_db), Task 03 (auth guards for admin endpoints)
 > **Depends On**: Task 02, Task 03
 > **Required By**: Task 05 (strategy system needs stock data), Task 07 (backtest needs price data), admin frontend tasks
+> **参考设计文档**:
+> - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构
+> - [phase-1.md](../design/phase-1.md) — Phase 1 MVP 详细设计
+> - [003-api-specification.md](../design/003-api-specification.md) — API规格
+> - [002-data-sources.md](../research/002-data-sources.md) — 数据源研究
 
 ---
 

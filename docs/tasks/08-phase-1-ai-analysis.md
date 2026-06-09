@@ -3,6 +3,12 @@
 > **Estimated time**: 2-3 days
 > **Dependencies**: Task 05 (signals), Task 06 (scheduler for the job that triggers it)
 > **Status**: Not started
+> **参考设计文档**:
+> - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构
+> - [phase-1.md](../design/phase-1.md) — Phase 1 MVP 详细设计
+> - [003-api-specification.md](../design/003-api-specification.md) — API规格
+> - [008-ai-analysis-system.md](../design/008-ai-analysis-system.md) — AI分析设计
+> - [009-ai-analysis.md](../research/009-ai-analysis.md) — AI研究
 
 ---
 

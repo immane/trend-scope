@@ -3,6 +3,12 @@
 > **Estimated time**: 2-3 days
 > **Dependencies**: Task 08 (AI analysis for email content), Task 05 (signals), Task 06 (scheduler job dispatch_alerts calls match_and_send), Task 02 (AlertRule/AlertLog models), Task 01 (RESEND_API_KEY in settings)
 > **Status**: Not started
+> **参考设计文档**:
+> - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构
+> - [phase-1.md](../design/phase-1.md) — Phase 1 MVP 详细设计
+> - [003-api-specification.md](../design/003-api-specification.md) — API规格
+> - [006-notification-system.md](../design/006-notification-system.md) — 通知系统设计
+> - [007-notification.md](../research/007-notification.md) — 通知研究
 
 ---
 

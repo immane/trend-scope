@@ -5,6 +5,10 @@
 > **Dependencies**: Task 01 (project init / admin scaffold exists), Task 03 (auth API running), Task 04 (stock/Kline API running), Task 05 (strategy/signal API running), Task 07 (backtest API running), Task 08 (AI analysis API running), Task 09 (alert API running)
 > **Depends On**: Task 01, 03, 04, 05, 07, 08, 09
 > **Required By**: Task 11 (integration tests)
+> **参考设计文档**:
+> - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构
+> - [phase-1.md](../design/phase-1.md) — Phase 1 MVP 详细设计
+> - [003-charting.md](../research/003-charting.md) — K线图表研究
 
 > **Prerequisite**: The `admin/` directory must already exist from Task 01 (`npx create-next-app@14 admin --typescript --tailwind --eslint --app --src-dir --import-alias "@/*"`). All backend APIs at `http://localhost:8000/api/v1` must be running.
 
