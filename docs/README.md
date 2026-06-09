@@ -162,25 +162,25 @@ npm run dev
 ## 文档导航
 
 ### 想了解整体架构？
-→ [001-preliminary-design.md](docs/design/001-preliminary-design.md)
+→ [design/001-preliminary-design.md](design/001-preliminary-design.md)
 
 ### 想看 Phase 1 具体做什么？
-→ [phase-1.md](docs/design/phase-1.md)
+→ [design/phase-1.md](design/phase-1.md)
 
 ### 想看详细开发任务？
-→ [tasks/](docs/tasks/) (11 个独立任务文件)
+→ [tasks/](tasks/) (11 个独立任务文件)
 
 ### 想看技术选型背后的研究？
-→ [research/](docs/research/) (9 个研究文档)
+→ [research/](research/) (9 个研究文档)
 
 ### 想看数据库怎么设计的？
-→ [002-database-schema.md](docs/design/002-database-schema.md)
+→ [design/002-database-schema.md](design/002-database-schema.md)
 
 ### 想看所有 API 接口？
-→ [003-api-specification.md](docs/design/003-api-specification.md)
+→ [design/003-api-specification.md](design/003-api-specification.md)
 
 ### 想了解怎么部署？
-→ [010-deployment-guide.md](docs/design/010-deployment-guide.md)
+→ [design/010-deployment-guide.md](design/010-deployment-guide.md)
 
 ---
 
