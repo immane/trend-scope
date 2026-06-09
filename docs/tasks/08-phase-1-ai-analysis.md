@@ -1,9 +1,9 @@
 # Task 08 — Phase 1 AI Analysis
 
 > **Estimated time**: 2-3 days
-> **依赖 (Depends On)**: T05 — 信号数据, T06 — 调度器触发
-> **被依赖 (Required By)**: T09 — 提醒邮件, T10 — 管理端前端
 > **Status**: Not started
+> **Depends On**: [Task 05 — 策略引擎](05-phase-1-strategy-engine.md), [Task 06 — 定时任务](06-phase-1-scheduler.md)
+> **Required By**: [Task 09 — 提醒邮件](09-phase-1-alert-email.md), [Task 10 — 管理端前端](10-phase-1-admin-frontend.md)
 > **参考设计文档**:
 > - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构
 > - [phase-1.md](../design/phase-1.md) — Phase 1 MVP 详细设计
@@ -849,15 +849,7 @@ except ImportError:
 
 ---
 
-## 13. Dependencies
-
-- **Task 05**: `AnalysisSignal` model, `AnalysisConfig` model
-- **Task 06**: Scheduler job `generate_ai_analysis` (imports this service)
-- **Task 03**: Auth system (`get_current_user`, `get_current_admin_user`)
-
----
-
-## 14. Estimated Time
+## 13. Estimated Time
 
 | Sub-task | Hours |
 |----------|-------|

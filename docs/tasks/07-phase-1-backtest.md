@@ -1,9 +1,9 @@
 # Task 07 — Phase 1 Backtest System
 
 > **Estimated time**: 2-3 days
-> **依赖 (Depends On)**: T05 — 策略引擎(generate_signals), T04 — 股票数据
-> **被依赖 (Required By)**: T10 — 管理端前端
 > **Status**: Not started
+> **Depends On**: [Task 04 — 股票数据](04-phase-1-stock-data.md), [Task 05 — 策略引擎](05-phase-1-strategy-engine.md)
+> **Required By**: [Task 10 — 管理端前端](10-phase-1-admin-frontend.md)
 > **参考设计文档**:
 > - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构
 > - [phase-1.md](../design/phase-1.md) — Phase 1 MVP 详细设计
@@ -1100,15 +1100,7 @@ Same response shape as history, admin-only.
 
 ---
 
-## 12. Dependencies
-
-- **Task 05**: `generate_signals()` function in `analysis_engine.py` — must be importable
-- **Task 04**: `StockPriceDaily` model + stock data service
-- **Task 03**: Auth system (`get_current_user`, `get_current_admin_user`)
-
----
-
-## 13. Estimated Time
+## 12. Estimated Time
 
 | Sub-task | Hours |
 |----------|-------|

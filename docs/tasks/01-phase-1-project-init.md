@@ -2,8 +2,8 @@
 
 > **Status**: Ready for Implementation
 > **Estimated Time**: 2-3 days
-> **依赖 (Depends On)**: 无 (this is the first task)
-> **被依赖 (Required By)**: T02 — 项目骨架, T03 — 项目骨架, T04 — 项目骨架, T10 — 项目骨架
+> **Depends On**: -
+> **Required By**: [Task 02 — 数据库层](02-phase-1-database.md), [Task 03 — 认证系统](03-phase-1-auth.md), [Task 04 — 股票数据](04-phase-1-stock-data.md)
 > **参考设计文档**:
 > - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构
 > - [phase-1.md](../design/phase-1.md) — Phase 1 MVP 详细设计

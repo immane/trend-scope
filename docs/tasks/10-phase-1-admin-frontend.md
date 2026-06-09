@@ -2,8 +2,8 @@
 
 > **Status**: Ready for Implementation
 > **Estimated Time**: 4-5 days
-> **依赖 (Depends On)**: T01 — 项目骨架, T03 — 认证API, T04 — 股票API, T05 — 策略API, T07 — 回测API, T08 — AI分析API, T09 — 提醒API
-> **被依赖 (Required By)**: T11 — 集成测试
+> **Depends On**: [Task 03 — 认证系统](03-phase-1-auth.md), [Task 04 — 股票数据](04-phase-1-stock-data.md), [Task 05 — 策略引擎](05-phase-1-strategy-engine.md), [Task 07 — 回测系统](07-phase-1-backtest.md), [Task 08 — AI分析](08-phase-1-ai-analysis.md), [Task 09 — 提醒邮件](09-phase-1-alert-email.md)
+> **Required By**: [Task 11 — 集成测试](11-phase-1-integration-test.md)
 > **参考设计文档**:
 > - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构
 > - [phase-1.md](../design/phase-1.md) — Phase 1 MVP 详细设计

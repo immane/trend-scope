@@ -1,9 +1,9 @@
 # Task 06 — Phase 1 Scheduler
 
 > **Estimated time**: 1-2 days
-> **依赖 (Depends On)**: T05 — 策略引擎, T04 — 数据服务
-> **被依赖 (Required By)**: T08 — 调度器, T09 — 调度器
 > **Status**: Not started
+> **Depends On**: [Task 04 — 股票数据](04-phase-1-stock-data.md), [Task 05 — 策略引擎](05-phase-1-strategy-engine.md)
+> **Required By**: [Task 08 — AI分析](08-phase-1-ai-analysis.md), [Task 09 — 提醒邮件](09-phase-1-alert-email.md)
 > **参考设计文档**:
 > - [001-preliminary-design.md](../design/001-preliminary-design.md) — 总体架构
 > - [phase-1.md](../design/phase-1.md) — Phase 1 MVP 详细设计
@@ -626,17 +626,7 @@ async def get_db_context():
 
 ---
 
-## 12. Dependencies
-
-- **Task 05**: `SignalEngine` class (scan_all_active, scan_single)
-- **Task 04**: `DataService` class (sync_all_active)
-- **Task 03**: Auth system (`get_current_admin_user` dependency)
-- **Task 08**: `AIAnalysisService` (stubbed — tested via ImportError handling)
-- **Task 09**: `AlertService` (stubbed — tested via ImportError handling)
-
----
-
-## 13. Estimated Time
+## 12. Estimated Time
 
 | Sub-task | Hours |
 |----------|-------|
