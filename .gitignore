@@ -27,5 +27,8 @@ Thumbs.db
 # Obsidian (personal vault config, not project code)
 .obsidian/
 
+# MkDocs build output
+site/
+
 # Docker
 docker-compose.override.yml
