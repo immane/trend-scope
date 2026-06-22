@@ -38,20 +38,20 @@ function LineSvg({ points, color, fill, valueLabel }: { points: CurvePoint[]; co
 
   return (
     <div className="overflow-x-auto">
-      <svg viewBox={`0 0 ${width} ${height}`} className="min-w-[720px] rounded-lg bg-white">
-        <line x1={padding} y1={padding} x2={padding} y2={height - padding} stroke="#e2e8f0" />
-        <line x1={padding} y1={height - padding} x2={width - padding} y2={height - padding} stroke="#e2e8f0" />
+      <svg viewBox={`0 0 ${width} ${height}`} className="min-w-[720px] rounded-lg bg-slate-950/60">
+        <line x1={padding} y1={padding} x2={padding} y2={height - padding} stroke="#334155" />
+        <line x1={padding} y1={height - padding} x2={width - padding} y2={height - padding} stroke="#334155" />
         {[0, 0.25, 0.5, 0.75, 1].map((tick) => {
           const value = min + span * tick;
           const yPos = y(value);
-          return <g key={tick}><line x1={padding} y1={yPos} x2={width - padding} y2={yPos} stroke="#f1f5f9" /><text x={8} y={yPos + 4} fontSize="11" fill="#64748b">{valueLabel(value)}</text></g>;
+          return <g key={tick}><line x1={padding} y1={yPos} x2={width - padding} y2={yPos} stroke="#1e293b" /><text x={8} y={yPos + 4} fontSize="11" fill="#94a3b8">{valueLabel(value)}</text></g>;
         })}
         {fill ? <path d={area} fill={fill} opacity="0.18" /> : null}
         <path d={path} fill="none" stroke={color} strokeWidth="3" strokeLinejoin="round" strokeLinecap="round" />
         <circle cx={x(0)} cy={y(first.value)} r="4" fill={color} />
         <circle cx={x(points.length - 1)} cy={y(last.value)} r="4" fill={color} />
-        <text x={padding} y={height - 10} fontSize="12" fill="#475569">{first.date}</text>
-        <text x={width - padding - 92} y={height - 10} fontSize="12" fill="#475569">{last.date}</text>
+        <text x={padding} y={height - 10} fontSize="12" fill="#94a3b8">{first.date}</text>
+        <text x={width - padding - 92} y={height - 10} fontSize="12" fill="#94a3b8">{last.date}</text>
       </svg>
     </div>
   );
@@ -64,9 +64,9 @@ function MonthlyBars({ data }: { data: Record<string, number> }) {
   return (
     <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
       {entries.map(([month, value]) => (
-        <div key={month} className="rounded-lg border border-slate-200 bg-white p-3">
-          <div className="mb-2 flex items-center justify-between text-sm"><span>{month.slice(0, 7)}</span><strong className={value >= 0 ? "text-emerald-600" : "text-rose-600"}>{formatPercent(value)}</strong></div>
-          <div className="h-2 rounded bg-slate-100"><div className={`h-2 rounded ${value >= 0 ? "bg-emerald-500" : "bg-rose-500"}`} style={{ width: `${Math.max(6, (Math.abs(value) / maxAbs) * 100)}%` }} /></div>
+        <div key={month} className="rounded-lg border border-slate-700/60 bg-slate-950/40 p-3">
+          <div className="mb-2 flex items-center justify-between text-sm"><span className="text-slate-300">{month.slice(0, 7)}</span><strong className={value >= 0 ? "text-emerald-400" : "text-rose-400"}>{formatPercent(value)}</strong></div>
+          <div className="h-2 rounded bg-slate-800"><div className={`h-2 rounded ${value >= 0 ? "bg-emerald-500" : "bg-rose-500"}`} style={{ width: `${Math.max(6, (Math.abs(value) / maxAbs) * 100)}%` }} /></div>
         </div>
       ))}
     </div>
@@ -97,8 +97,8 @@ export default function BacktestDetailPage({ params }: { params: { id: string } 
         {data?.error_message ? <Alert type="error" showIcon message="回测执行失败" description={data.error_message} /> : null}
 
         <Row gutter={[16, 16]}>
-          <Col xs={24} md={8} xl={4}><Card><Statistic title="策略总收益率" value={formatPercent(data?.total_return)} prefix={totalReturn >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />} valueStyle={{ color: totalReturn >= 0 ? "#059669" : "#dc2626" }} /></Card></Col>
-          <Col xs={24} md={8} xl={4}><Card><Statistic title="最大回撤" value={formatPercent(data?.max_drawdown)} prefix={<WarningOutlined />} valueStyle={{ color: "#dc2626" }} /></Card></Col>
+          <Col xs={24} md={8} xl={4}><Card><Statistic title="策略总收益率" value={formatPercent(data?.total_return)} prefix={totalReturn >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />} valueStyle={{ color: totalReturn >= 0 ? "#10b981" : "#f43f5e" }} /></Card></Col>
+          <Col xs={24} md={8} xl={4}><Card><Statistic title="最大回撤" value={formatPercent(data?.max_drawdown)} prefix={<WarningOutlined />} valueStyle={{ color: "#f43f5e" }} /></Card></Col>
           <Col xs={24} md={8} xl={4}><Card><Statistic title="年化收益 CAGR" value={formatPercent(data?.cagr)} prefix={<RiseOutlined />} /></Card></Col>
           <Col xs={24} md={8} xl={4}><Card><Statistic title="Sharpe 夏普比率" value={formatRatio(data?.sharpe_ratio)} prefix={<BarChartOutlined />} /></Card></Col>
           <Col xs={24} md={8} xl={4}><Card><Statistic title="胜率" value={formatPercent(data?.win_rate)} prefix={<FundProjectionScreenOutlined />} /></Card></Col>
@@ -107,18 +107,18 @@ export default function BacktestDetailPage({ params }: { params: { id: string } 
 
         <Card title="收益对比（策略 vs 买入持有）" extra={<Tag color={excessReturn >= 0 ? "green" : "orange"}>超额收益 {formatPercent(excessReturn)}</Tag>}>
           <Row gutter={[16, 16]}>
-            <Col xs={24} md={8}><Statistic title="策略收益" value={formatPercent(data?.total_return)} valueStyle={{ color: totalReturn >= 0 ? "#059669" : "#dc2626" }} /></Col>
+            <Col xs={24} md={8}><Statistic title="策略收益" value={formatPercent(data?.total_return)} valueStyle={{ color: totalReturn >= 0 ? "#10b981" : "#f43f5e" }} /></Col>
             <Col xs={24} md={8}><Statistic title="买入持有 Benchmark" value={formatPercent(data?.benchmark_return)} /></Col>
             <Col xs={24} md={8}><Statistic title="初始资金" value={formatMoney(data?.initial_capital)} /></Col>
           </Row>
         </Card>
 
         <Card title={<Space><LineChartOutlined />权益曲线：账户净值变化</Space>}>
-          {equityPoints.length ? <LineSvg points={equityPoints} color="#2563eb" fill="#2563eb" valueLabel={(value) => `$${Math.round(value / 1000)}k`} /> : <Typography.Text type="secondary">暂无权益曲线数据</Typography.Text>}
+          {equityPoints.length ? <LineSvg points={equityPoints} color="#38bdf8" fill="#38bdf8" valueLabel={(value) => `$${Math.round(value / 1000)}k`} /> : <Typography.Text type="secondary">暂无权益曲线数据</Typography.Text>}
         </Card>
 
         <Card title={<Space><WarningOutlined />回撤曲线：从历史高点下跌幅度</Space>}>
-          {drawdownPoints.length ? <LineSvg points={drawdownPoints} color="#dc2626" fill="#dc2626" valueLabel={(value) => formatPercent(value)} /> : <Typography.Text type="secondary">暂无回撤曲线数据</Typography.Text>}
+          {drawdownPoints.length ? <LineSvg points={drawdownPoints} color="#f43f5e" fill="#f43f5e" valueLabel={(value) => formatPercent(value)} /> : <Typography.Text type="secondary">暂无回撤曲线数据</Typography.Text>}
         </Card>
 
         <Card title="完整分析指标说明">

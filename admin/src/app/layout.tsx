@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import { ConfigProvider } from "antd";
-import zhCN from "antd/locale/zh_CN";
 import "./globals.css";
 import { QueryClientProvider } from "./providers";
 
@@ -19,16 +17,7 @@ export default function RootLayout({
     <html lang="zh-CN">
       <body>
         <AntdRegistry>
-          <ConfigProvider
-            locale={zhCN}
-            theme={{
-              token: {
-                colorPrimary: "#1677ff",
-              },
-            }}
-          >
-            <QueryClientProvider>{children}</QueryClientProvider>
-          </ConfigProvider>
+          <QueryClientProvider>{children}</QueryClientProvider>
         </AntdRegistry>
       </body>
     </html>

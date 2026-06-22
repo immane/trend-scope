@@ -49,7 +49,7 @@ export default function AlertDetailPage({ params }: { params: { id: string } }) 
 
       <Card className="mb-4" title={<span><MailOutlined className="mr-2" />邮件主题</span>}><Typography.Text strong>{data?.title ?? "--"}</Typography.Text></Card>
 
-      <Card title="邮件内容"><div className="max-h-96 overflow-auto rounded bg-slate-50 p-4 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: data?.message ?? "--" }} /></Card>
+      <Card title="邮件内容"><div className="max-h-96 overflow-auto rounded border border-slate-700/60 bg-slate-950/50 p-4 text-sm leading-relaxed text-slate-200" dangerouslySetInnerHTML={{ __html: data?.message ?? "--" }} /></Card>
     </AdminShell></AuthGuard>
   );
 }

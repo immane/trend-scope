@@ -54,19 +54,19 @@ export default function SignalDetailPage({ params }: { params: { id: string } })
         <Col span={4}><Card><Statistic title="触发日期" value={data?.triggered_date} /></Card></Col>
       </Row>
 
-      <Card className="mb-4" title="触发详情"><pre className="rounded bg-slate-50 p-3 text-sm">{JSON.stringify(data?.trigger_details ?? {}, null, 2)}</pre></Card>
+      <Card className="mb-4" title="触发详情"><pre className="rounded bg-slate-950/60 p-3 text-sm text-slate-100">{JSON.stringify(data?.trigger_details ?? {}, null, 2)}</pre></Card>
 
       <Card title={<span><RobotOutlined className="mr-2" />AI 分析</span>} extra={<Button onClick={generateAI}>生成/重新生成分析</Button>} className="mb-4">
         {data?.ai_analysis ? (
           <>
             <Typography.Text type="secondary">模型: {data.ai_analysis.model_provider} · 生成时间: {data.ai_analysis.generated_at}</Typography.Text>
             <div className="mt-3 grid gap-3 md:grid-cols-2">
-              <div className="rounded-lg border border-slate-200 p-3">
-                <div className="mb-1 text-xs font-semibold text-slate-500">核心摘要</div>
+              <div className="rounded-lg border border-slate-700/60 bg-slate-950/40 p-3">
+                <div className="mb-1 text-xs font-semibold text-slate-400">核心摘要</div>
                 <div className="text-sm">{String(data.ai_analysis.analysis_json?.summary ?? "--")}</div>
               </div>
-              <div className="rounded-lg border border-slate-200 p-3">
-                <div className="mb-1 text-xs font-semibold text-slate-500">置信度</div>
+              <div className="rounded-lg border border-slate-700/60 bg-slate-950/40 p-3">
+                <div className="mb-1 text-xs font-semibold text-slate-400">置信度</div>
                 <div className="text-sm">{(Number((data.ai_analysis.analysis_json as Record<string, unknown>)?.confidence ?? 0) * 100).toFixed(1)}%</div>
               </div>
             </div>

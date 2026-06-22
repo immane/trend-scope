@@ -26,7 +26,7 @@ function Sparkline({ data, isPositive }: { data: number[]; isPositive: boolean }
   }).join(" ");
   return (
     <svg width={width} height={height} className="inline-block align-middle">
-      <path d={points} fill="none" stroke={isPositive ? "#059669" : "#dc2626"} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+      <path d={points} fill="none" stroke={isPositive ? "#10b981" : "#f43f5e"} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
     </svg>
   );
 }

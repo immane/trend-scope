@@ -174,7 +174,7 @@ export default function KlineChartInner({ stockId }: { stockId: string }) {
           <span className="inline-block h-0.5 w-4 rounded bg-blue-400" /><span className="text-slate-400">DEA</span>
           <span className="text-slate-200">{last?.macd_dea?.toFixed(4) ?? "--"}</span>
         </span>
-        <span className="ml-auto text-slate-500">成交量 <span className="text-slate-300">{last?.volume?.toLocaleString() ?? "--"}</span></span>
+        <span className="ml-auto text-slate-400">成交量 <span className="text-slate-300">{last?.volume?.toLocaleString() ?? "--"}</span></span>
       </div>
 
       {/* Chart */}

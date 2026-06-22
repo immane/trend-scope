@@ -10,7 +10,7 @@ import apiClient from "@/lib/api";
 import { formatPercent, formatRatio } from "@/lib/format";
 import type { BacktestItem, CurvePoint } from "@/types/api";
 
-const colors = ["#2563eb", "#dc2626", "#059669", "#7c3aed", "#ea580c", "#0891b2", "#be123c", "#4d7c0f", "#9333ea", "#0f766e", "#ca8a04"];
+const colors = ["#38bdf8", "#f43f5e", "#10b981", "#d6a84f", "#a78bfa", "#22d3ee", "#fb7185", "#84cc16", "#f59e0b", "#14b8a6", "#eab308"];
 
 function numberValue(value?: string | number | null) {
   if (value == null) return null;
@@ -39,13 +39,13 @@ function MultiLineChart({ series, valueLabel }: { series: Array<{ name: string; 
 
   return (
     <div className="overflow-x-auto">
-      <svg viewBox={`0 0 ${width} ${height}`} className="min-w-[760px] rounded-lg bg-white">
-        <line x1={padding} y1={padding} x2={padding} y2={height - padding} stroke="#e2e8f0" />
-        <line x1={padding} y1={height - padding} x2={width - padding} y2={height - padding} stroke="#e2e8f0" />
+      <svg viewBox={`0 0 ${width} ${height}`} className="min-w-[760px] rounded-lg bg-slate-950/60">
+        <line x1={padding} y1={padding} x2={padding} y2={height - padding} stroke="#334155" />
+        <line x1={padding} y1={height - padding} x2={width - padding} y2={height - padding} stroke="#334155" />
         {[0, 0.25, 0.5, 0.75, 1].map((tick) => {
           const value = min + span * tick;
           const yPos = y(value);
-          return <g key={tick}><line x1={padding} y1={yPos} x2={width - padding} y2={yPos} stroke="#f1f5f9" /><text x={6} y={yPos + 4} fontSize="11" fill="#64748b">{valueLabel(value)}</text></g>;
+          return <g key={tick}><line x1={padding} y1={yPos} x2={width - padding} y2={yPos} stroke="#1e293b" /><text x={6} y={yPos + 4} fontSize="11" fill="#94a3b8">{valueLabel(value)}</text></g>;
         })}
         {series.map((item) => {
           const path = item.points.map((point, index) => `${index === 0 ? "M" : "L"}${x(index, item.points.length).toFixed(2)},${y(point.value).toFixed(2)}`).join(" ");
