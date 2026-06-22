@@ -8,6 +8,7 @@ import AdminShell from "@/components/layout/AdminShell";
 import AuthGuard from "@/components/layout/AuthGuard";
 import apiClient from "@/lib/api";
 import { formatInteger, formatPercent, formatRatio } from "@/lib/format";
+import { dateDesc, sortByDateDesc } from "@/lib/sort";
 import type { BacktestItem, PaginatedResponse } from "@/types/api";
 
 function statusTag(status: string) {
@@ -37,7 +38,7 @@ export default function BacktestPage() {
     </Space>
     <Table
       rowKey="id"
-      dataSource={data?.items ?? []}
+      dataSource={sortByDateDesc(data?.items ?? [], (item) => item.created_at)}
       pagination={{ current: page, pageSize, total: data?.total ?? 0, showSizeChanger: true, showTotal: (total) => `共 ${total} 条`, onChange: (nextPage, nextSize) => { setPage(nextPage); if (nextSize !== pageSize) { setPageSize(nextSize); setPage(1); } } }}
       rowSelection={{ selectedRowKeys: selectedIds, onChange: setSelectedIds }}
       onRow={(record) => ({ onClick: () => router.push(`/backtest/${record.id}`), className: "cursor-pointer" })}
@@ -50,7 +51,7 @@ export default function BacktestPage() {
         { title: "最大回撤", dataIndex: "max_drawdown", render: formatPercent },
         { title: "Sharpe 夏普", dataIndex: "sharpe_ratio", render: formatRatio },
         { title: "交易次数", dataIndex: "num_trades", render: formatInteger },
-        { title: "创建时间", dataIndex: "created_at" },
+        { title: "创建时间", dataIndex: "created_at", defaultSortOrder: "descend", sorter: (a, b) => -dateDesc(a.created_at, b.created_at) },
         { title: "详情", render: (_, record) => <Button onClick={(event) => { event.stopPropagation(); router.push(`/backtest/${record.id}`); }}>查看详情</Button> },
       ]}
     />

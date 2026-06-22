@@ -10,6 +10,7 @@ from app.core.config import settings
 from app.models.ai_analysis import AIAnalysisResult
 from app.models.analysis import AnalysisSignal
 from app.models.stock import Stock
+from app.services.ai_config import ai_config
 
 
 class AIAnalysisService:
@@ -30,8 +31,8 @@ class AIAnalysisService:
             self.db.add(existing)
         else:
             existing.analysis_json = payload
-        existing.model_provider = "deepseek" if settings.DEEPSEEK_API_KEY else "template"
-        existing.model_name = settings.DEEPSEEK_MODEL if settings.DEEPSEEK_API_KEY else "fallback-template"
+        existing.model_provider = "deepseek" if ai_config.effective_api_key else "template"
+        existing.model_name = ai_config.effective_model if ai_config.effective_api_key else "fallback-template"
         existing.prompt_tokens = 0
         existing.completion_tokens = 0
         existing.total_cost = Decimal("0")
@@ -50,12 +51,12 @@ class AIAnalysisService:
             "confidence": float(signal.confidence or 0.7),
             "disclaimer": "以上为AI生成的参考分析，不构成投资建议。投资有风险，入市需谨慎。",
         }
-        if not settings.DEEPSEEK_API_KEY:
+        if not ai_config.effective_api_key:
             return fallback
         try:
-            client = AsyncOpenAI(api_key=settings.DEEPSEEK_API_KEY, base_url=settings.DEEPSEEK_BASE_URL)
+            client = AsyncOpenAI(api_key=ai_config.effective_api_key, base_url=ai_config.effective_base_url)
             response = await client.chat.completions.create(
-                model=settings.DEEPSEEK_MODEL,
+                model=ai_config.effective_model,
                 messages=[
                     {"role": "system", "content": "你是专业的技术分析助手。请用简体中文输出简短 JSON。"},
                     {"role": "user", "content": f"分析 {symbol} {direction} 信号，价格 {signal.trigger_price}，日期 {signal.triggered_date}"},

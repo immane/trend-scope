@@ -9,6 +9,7 @@ import AdminShell from "@/components/layout/AdminShell";
 import AuthGuard from "@/components/layout/AuthGuard";
 import apiClient from "@/lib/api";
 import { formatMoney } from "@/lib/format";
+import { dateDesc, sortByDateDesc } from "@/lib/sort";
 import type { PaginatedResponse, StockSummary } from "@/types/api";
 
 function Sparkline({ data, isPositive }: { data: number[]; isPositive: boolean }) {
@@ -26,7 +27,7 @@ function Sparkline({ data, isPositive }: { data: number[]; isPositive: boolean }
   }).join(" ");
   return (
     <svg width={width} height={height} className="inline-block align-middle">
-      <path d={points} fill="none" stroke={isPositive ? "#059669" : "#dc2626"} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+      <path d={points} fill="none" stroke={isPositive ? "#10b981" : "#f43f5e"} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
     </svg>
   );
 }
@@ -73,7 +74,7 @@ export default function StocksPage() {
     </Space>
     <Table<StockSummary>
       rowKey="id"
-      dataSource={data?.items ?? []}
+      dataSource={sortByDateDesc(data?.items ?? [], (item) => item.latest_date)}
       pagination={{ current: page, pageSize, total: data?.total ?? 0, showSizeChanger: true, showTotal: (total) => `共 ${total} 条`, onChange: (nextPage, nextSize) => { setPage(nextPage); setPageSize(nextSize); } }}
       onRow={(record) => ({ onClick: () => router.push(`/stocks/${record.id}`), className: "cursor-pointer" })}
       columns={[
@@ -115,6 +116,8 @@ export default function StocksPage() {
           title: "最后更新",
           dataIndex: "latest_date",
           render: (value) => value ? <Typography.Text type="secondary" className="text-xs">{value}</Typography.Text> : <Typography.Text type="secondary">待同步</Typography.Text>,
+          defaultSortOrder: "descend",
+          sorter: (a, b) => -dateDesc(a.latest_date, b.latest_date),
         },
         {
           title: "同步",

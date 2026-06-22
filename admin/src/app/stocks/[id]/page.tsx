@@ -50,7 +50,7 @@ function Week52Bar({ high, low, current }: { high: number; low: number; current:
           <div className="absolute -top-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rounded-full border-2 border-white bg-blue-500" />
         </div>
       </div>
-      <div className="mt-0.5 text-center text-xs text-slate-500">当前 ${current.toFixed(2)} ({pct.toFixed(0)}% 位置)</div>
+      <div className="mt-0.5 text-center text-xs text-slate-400">当前 ${current.toFixed(2)} ({pct.toFixed(0)}% 位置)</div>
     </div>
   );
 }
@@ -144,7 +144,7 @@ export default function StockDetailPage({ params }: { params: { id: string } }) 
             </span>
           )}
           {quote?.latest_date && (
-            <span className="ml-auto text-xs text-slate-500">数据截至 {quote.latest_date}</span>
+            <span className="ml-auto text-xs text-slate-400">数据截至 {quote.latest_date}</span>
           )}
         </div>
       </div>
@@ -158,9 +158,9 @@ export default function StockDetailPage({ params }: { params: { id: string } }) 
           ["昨收", quote?.previous_close, formatMoney] as const,
         ]).map(([label, value, fmt]) => (
           <Col key={label} xs={12} md={6} lg={3}>
-            <div className="rounded-lg bg-white p-3 shadow-sm">
+            <div className="rounded-lg border border-slate-700/60 bg-slate-950/40 p-3 shadow-sm">
               <div className="text-xs text-slate-400">{label}</div>
-              <div className="text-base font-semibold text-slate-900">{fmt(value ?? null)}</div>
+              <div className="text-base font-semibold text-slate-100">{fmt(value ?? null)}</div>
             </div>
           </Col>
         ))}
@@ -169,16 +169,16 @@ export default function StockDetailPage({ params }: { params: { id: string } }) 
           ["30日均量", quote?.avg_volume_30d] as const,
         ]).map(([label, value]) => (
           <Col key={label as string} xs={12} md={6} lg={3}>
-            <div className="rounded-lg bg-white p-3 shadow-sm">
+            <div className="rounded-lg border border-slate-700/60 bg-slate-950/40 p-3 shadow-sm">
               <div className="text-xs text-slate-400">{label}</div>
-              <div className="text-base font-semibold text-slate-900">{value != null ? value.toLocaleString() : "--"}</div>
+              <div className="text-base font-semibold text-slate-100">{value != null ? value.toLocaleString() : "--"}</div>
             </div>
           </Col>
         ))}
         <Col xs={24} md={12} lg={6}>
-          <div className="rounded-lg bg-white p-3 shadow-sm">
+          <div className="rounded-lg border border-slate-700/60 bg-slate-950/40 p-3 shadow-sm">
             <div className="text-xs text-slate-400">数据量</div>
-            <div className="text-base font-semibold text-slate-900">{quote?.total_rows != null ? `${quote.total_rows} 个交易日` : "--"}</div>
+            <div className="text-base font-semibold text-slate-100">{quote?.total_rows != null ? `${quote.total_rows} 个交易日` : "--"}</div>
             <div className="text-xs text-slate-400">{quote?.earliest_date ?? "--"} ~ {quote?.latest_date ?? "--"}</div>
           </div>
         </Col>
@@ -187,16 +187,16 @@ export default function StockDetailPage({ params }: { params: { id: string } }) 
       {/* ---- 52w range + period returns ---- */}
       <Row gutter={[12, 12]} className="mb-4">
         <Col xs={24} lg={14}>
-          <div className="rounded-lg bg-white p-4 shadow-sm">
-            <div className="mb-3 text-sm font-semibold text-slate-700">52 周价格区间</div>
+          <div className="rounded-lg border border-slate-700/60 bg-slate-950/40 p-4 shadow-sm">
+            <div className="mb-3 text-sm font-semibold text-slate-200">52 周价格区间</div>
             {quote?.fifty_two_week_high && quote.fifty_two_week_low && quote.latest_price ? (
               <Week52Bar high={quote.fifty_two_week_high} low={quote.fifty_two_week_low} current={quote.latest_price} />
             ) : <div className="text-sm text-slate-400">数据不足，需要至少 1 年历史行情。</div>}
           </div>
         </Col>
         <Col xs={24} lg={10}>
-          <div className="rounded-lg bg-white p-4 shadow-sm">
-            <div className="mb-3 text-sm font-semibold text-slate-700">各周期表现</div>
+          <div className="rounded-lg border border-slate-700/60 bg-slate-950/40 p-4 shadow-sm">
+            <div className="mb-3 text-sm font-semibold text-slate-200">各周期表现</div>
             <div className="grid grid-cols-5 gap-2">
               <RateItem label="1周" value={quote?.return_1w ?? null} />
               <RateItem label="1月" value={quote?.return_1m ?? null} />

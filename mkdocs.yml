@@ -58,6 +58,11 @@ markdown_extensions:
 
 nav:
   - 首页: README.md
+  - 帮助文档:
+      - 快速开始: help/quickstart.md
+      - 管理后台指南: help/admin-guide.md
+      - 策略脚本参考: help/strategy-script.md
+      - AI 配置指南: help/ai-config.md
   - 架构设计:
       - 总体架构: design/001-preliminary-design.md
       - 数据库设计: design/002-database-schema.md

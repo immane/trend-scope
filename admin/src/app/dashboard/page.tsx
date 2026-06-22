@@ -1,7 +1,7 @@
 "use client";
 
-import { BellOutlined, ExperimentOutlined, LineChartOutlined, SettingOutlined, StockOutlined, ThunderboltOutlined, UserOutlined } from "@ant-design/icons";
-import { Card, Col, List, Row, Statistic, Tag, Typography } from "antd";
+import { BarChartOutlined, BellOutlined, ExperimentOutlined, LineChartOutlined, SettingOutlined, StockOutlined, ThunderboltOutlined, UserOutlined } from "@ant-design/icons";
+import { Card, Col, List, Row, Space, Statistic, Tag, Typography } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import AdminShell from "@/components/layout/AdminShell";
 import AuthGuard from "@/components/layout/AuthGuard";
@@ -9,11 +9,11 @@ import apiClient from "@/lib/api";
 import type { BacktestItem, PaginatedResponse } from "@/types/api";
 
 const statCards = [
-  { key: "users", title: "用户总数", icon: <UserOutlined style={{ fontSize: 24, color: "#2563eb" }} /> },
-  { key: "stocks", title: "标的总数", icon: <StockOutlined style={{ fontSize: 24, color: "#059669" }} /> },
-  { key: "strategies", title: "策略数量", icon: <ThunderboltOutlined style={{ fontSize: 24, color: "#ea580c" }} /> },
-  { key: "signals", title: "信号数量", icon: <LineChartOutlined style={{ fontSize: 24, color: "#7c3aed" }} /> },
-  { key: "alerts", title: "提醒次数", icon: <BellOutlined style={{ fontSize: 24, color: "#dc2626" }} /> },
+  { key: "users", title: "用户总数", icon: <UserOutlined style={{ fontSize: 24, color: "#38bdf8" }} /> },
+  { key: "stocks", title: "标的总数", icon: <StockOutlined style={{ fontSize: 24, color: "#10b981" }} /> },
+  { key: "strategies", title: "策略数量", icon: <ThunderboltOutlined style={{ fontSize: 24, color: "#d6a84f" }} /> },
+  { key: "signals", title: "信号数量", icon: <LineChartOutlined style={{ fontSize: 24, color: "#a78bfa" }} /> },
+  { key: "alerts", title: "提醒次数", icon: <BellOutlined style={{ fontSize: 24, color: "#f43f5e" }} /> },
 ];
 
 export default function DashboardPage() {
@@ -24,8 +24,22 @@ export default function DashboardPage() {
 
   return (
     <AuthGuard><AdminShell>
-      <Typography.Title level={2}>Dashboard</Typography.Title>
-      <Typography.Paragraph type="secondary">趋势分析与信号生成平台 — 策略管理、回测验证、AI 分析、邮件提醒一站式管理面板。</Typography.Paragraph>
+      <section className="admin-hero-card">
+        <span className="admin-kicker"><BarChartOutlined /> Market Intelligence</span>
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-3xl">
+            <Typography.Title level={2} className="!mb-2">Trend-Scope 控制台</Typography.Title>
+            <Typography.Paragraph type="secondary" className="!mb-0 !text-base">
+              聚合标的行情、策略信号、回测验证、AI 分析和提醒分发，为 ETF/指数基金投资策略提供一站式运营视图。
+            </Typography.Paragraph>
+          </div>
+          <Space wrap>
+            <Tag color="blue">Phase 1 MVP</Tag>
+            <Tag color="green">自动调度</Tag>
+            <Tag color="purple">AI 分析</Tag>
+          </Space>
+        </div>
+      </section>
 
       <Row gutter={[16, 16]} className="mb-6">
         {statCards.map((item) => (
@@ -43,7 +57,7 @@ export default function DashboardPage() {
           <Card hoverable>
             <div className="mb-3 flex items-center justify-between">
               <Typography.Text type="secondary">回测总数</Typography.Text>
-              <ExperimentOutlined style={{ fontSize: 24, color: "#0891b2" }} />
+              <ExperimentOutlined style={{ fontSize: 24, color: "#22d3ee" }} />
             </div>
             <Statistic value={backtests?.total ?? 0} />
           </Card>

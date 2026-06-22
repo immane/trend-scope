@@ -188,7 +188,7 @@ export function getStrategyTemplate(key?: string) {
 
 export default function StrategyCodeEditor({ value, onChange }: { value?: string; onChange?: (value: string) => void }) {
   return (
-    <div className="overflow-hidden rounded-lg border border-slate-200">
+    <div className="overflow-hidden rounded-lg border border-slate-700/70 bg-slate-950/60">
       <MonacoEditor
         height="420px"
         defaultLanguage="python"

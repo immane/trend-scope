@@ -36,7 +36,7 @@ class ScriptExecutor:
         if not has_analyze:
             raise ScriptValidationError("脚本必须定义 analyze(df, params) 函数")
 
-    def run(self, script: str, df: pd.DataFrame, params: dict) -> pd.Series:
+    def run(self, script: str, df: pd.DataFrame, params: dict) -> pd.Series | pd.DataFrame:
         self.validate(script)
         globals_dict = {
             "pd": pd,
@@ -60,6 +60,6 @@ class ScriptExecutor:
         if not callable(analyze):
             raise ScriptValidationError("脚本必须定义 analyze(df, params) 函数")
         result = analyze(df.copy(), params or {})
-        if not isinstance(result, pd.Series):
-            raise ScriptValidationError("analyze() 必须返回 pandas.Series")
+        if not isinstance(result, (pd.Series, pd.DataFrame)):
+            raise ScriptValidationError("analyze() 必须返回 pandas.Series 或 pandas.DataFrame")
         return result
