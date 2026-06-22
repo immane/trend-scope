@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import AdminShell from "@/components/layout/AdminShell";
 import AuthGuard from "@/components/layout/AuthGuard";
 import apiClient from "@/lib/api";
+import { formatPercent, formatRatio } from "@/lib/format";
 import type { BacktestItem, CurvePoint } from "@/types/api";
 
 const colors = ["#2563eb", "#dc2626", "#059669", "#7c3aed", "#ea580c", "#0891b2", "#be123c", "#4d7c0f", "#9333ea", "#0f766e", "#ca8a04"];
@@ -15,16 +16,6 @@ function numberValue(value?: string | number | null) {
   if (value == null) return null;
   const numeric = Number(value);
   return Number.isFinite(numeric) ? numeric : null;
-}
-
-function percentText(value?: string | number | null) {
-  const numeric = numberValue(value);
-  return numeric == null ? "--" : `${(numeric * 100).toFixed(2)}%`;
-}
-
-function decimalText(value?: string | number | null) {
-  const numeric = numberValue(value);
-  return numeric == null ? "--" : numeric.toFixed(2);
 }
 
 function normalizeEquity(points: CurvePoint[]) {
@@ -89,16 +80,16 @@ function BacktestCompareContent() {
 
         <Row gutter={[16, 16]}>
           <Col xs={24} md={8}><Card><Statistic title="参与对比数量" value={completed.length} /></Card></Col>
-          <Col xs={24} md={8}><Card><Statistic title="最佳策略收益" value={best ? percentText(best.total_return) : "--"} /></Card></Col>
-          <Col xs={24} md={8}><Card><Statistic title="最佳回测 ID" value={best ? `#${best.id}` : "--"} /></Card></Col>
+          <Col xs={24} md={8}><Card><Statistic title="最佳策略收益" value={best ? formatPercent(best.total_return) : "--"} /></Card></Col>
+          <Col xs={24} md={8}><Card><Statistic title="最佳回测" value={best ? `${best.strategy_name || `ID ${best.id}`} (#${best.id})` : "--"} /></Card></Col>
         </Row>
 
-        <Card title="归一化收益曲线（起点统一为 0%，便于比较）" extra={<Space wrap>{completed.map((item, index) => <Tag key={item.id} color={colors[index % colors.length]}>#{item.id} 策略 {item.config_id}</Tag>)}</Space>}>
-          <MultiLineChart series={normalizedSeries} valueLabel={percentText} />
+        <Card title="归一化收益曲线（起点统一为 0%，便于比较）" extra={<Space wrap>{completed.map((item, index) => <Tag key={item.id} color={colors[index % colors.length]}>#{item.id} {item.strategy_name || `策略 ${item.config_id}`}</Tag>)}</Space>}>
+          <MultiLineChart series={normalizedSeries} valueLabel={formatPercent} />
         </Card>
 
         <Card title="最大回撤过程对比（越接近 0 越好）">
-          <MultiLineChart series={drawdownSeries} valueLabel={percentText} />
+          <MultiLineChart series={drawdownSeries} valueLabel={formatPercent} />
         </Card>
 
         <Card title="指标对比表">
@@ -108,16 +99,16 @@ function BacktestCompareContent() {
             pagination={false}
             columns={[
               { title: "回测 ID", dataIndex: "id", render: (id) => `#${id}` },
-              { title: "标的 ID", dataIndex: "stock_id" },
-              { title: "策略 ID", dataIndex: "config_id" },
+              { title: "标的", dataIndex: "stock_id", render: (value, record) => record.stock_symbol ? `${record.stock_symbol} (#${value})` : `#${value}` },
+              { title: "策略", dataIndex: "config_id", render: (value, record) => record.strategy_name ? `${record.strategy_name} (#${value})` : `策略 #${value}` },
               { title: "区间", render: (_, row) => `${row.start_date} 至 ${row.end_date}` },
-              { title: "总收益", dataIndex: "total_return", render: percentText, sorter: (a, b) => (numberValue(a.total_return) ?? 0) - (numberValue(b.total_return) ?? 0) },
-              { title: "Benchmark", dataIndex: "benchmark_return", render: percentText },
-              { title: "最大回撤", dataIndex: "max_drawdown", render: percentText, sorter: (a, b) => (numberValue(a.max_drawdown) ?? 0) - (numberValue(b.max_drawdown) ?? 0) },
-              { title: "Sharpe", dataIndex: "sharpe_ratio", render: decimalText },
-              { title: "胜率", dataIndex: "win_rate", render: percentText },
+              { title: "总收益", dataIndex: "total_return", render: formatPercent, sorter: (a, b) => (numberValue(a.total_return) ?? 0) - (numberValue(b.total_return) ?? 0) },
+              { title: "Benchmark", dataIndex: "benchmark_return", render: formatPercent },
+              { title: "最大回撤", dataIndex: "max_drawdown", render: formatPercent, sorter: (a, b) => (numberValue(a.max_drawdown) ?? 0) - (numberValue(b.max_drawdown) ?? 0) },
+              { title: "Sharpe", dataIndex: "sharpe_ratio", render: formatRatio },
+              { title: "胜率", dataIndex: "win_rate", render: formatPercent },
               { title: "交易次数", dataIndex: "num_trades" },
-              { title: "盈亏比", dataIndex: "profit_factor", render: decimalText },
+              { title: "盈亏比", dataIndex: "profit_factor", render: formatRatio },
             ]}
           />
         </Card>

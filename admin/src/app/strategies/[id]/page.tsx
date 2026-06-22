@@ -1,13 +1,15 @@
 "use client";
 
-import { Alert, Button, Card, DatePicker, Form, Input, InputNumber, Select, Space, Switch, Tabs, Typography, message } from "antd";
+import { Alert, Button, Card, DatePicker, Empty, Form, Input, InputNumber, Select, Space, Switch, Table, Tabs, Tag, Typography, message } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import AdminShell from "@/components/layout/AdminShell";
 import AuthGuard from "@/components/layout/AuthGuard";
 import StrategyCodeEditor, { DEFAULT_STRATEGY_SCRIPT, STRATEGY_TEMPLATES, getStrategyTemplate } from "@/components/strategy/StrategyCodeEditor";
 import apiClient from "@/lib/api";
-import type { Strategy } from "@/types/api";
+import { formatInteger, formatPercent } from "@/lib/format";
+import type { BacktestItem, PaginatedResponse, Strategy } from "@/types/api";
 
 interface StrategyEditValues {
   name: string;
@@ -33,8 +35,14 @@ function stringifyJson(value: unknown) {
 }
 
 export default function StrategyDetailPage({ params }: { params: { id: string } }) {
+  const router = useRouter();
   const [form] = Form.useForm<StrategyEditValues>();
   const { data, refetch } = useQuery({ queryKey: ["strategy", params.id], queryFn: async () => (await apiClient.get<Strategy>(`/admin/strategies/${params.id}`)).data });
+  const { data: backtestsData, refetch: refetchBacktests } = useQuery({
+    queryKey: ["strategy-backtests", params.id],
+    queryFn: async () => (await apiClient.get<PaginatedResponse<BacktestItem>>("/admin/backtests", { params: { config_id: Number(params.id), size: 50 } })).data,
+  });
+  const backtests = backtestsData?.items ?? [];
 
   function applyTemplate(templateKey: string) {
     const template = getStrategyTemplate(templateKey);
@@ -95,6 +103,7 @@ export default function StrategyDetailPage({ params }: { params: { id: string } 
     const [start, end] = values.range as Array<{ toISOString: () => string }>;
     const response = await apiClient.post("/backtest/run", { stock_id: values.stock_id, config_id: Number(params.id), start_date: start.toISOString().slice(0, 10), end_date: end.toISOString().slice(0, 10) });
     message.success(`回测已完成，结果 ID: ${response.data.id}`);
+    refetchBacktests();
   }
 
   return (
@@ -136,15 +145,44 @@ export default function StrategyDetailPage({ params }: { params: { id: string } 
             },
             {
               key: "backtest",
-              label: "运行回测",
+              label: `回测记录 (${(backtests ?? []).length})`,
               children: (
-                <Card title="运行回测">
-                  <Form layout="inline" onFinish={run} initialValues={{ stock_id: data?.stock_id ?? 1 }}>
-                    <Form.Item name="stock_id" label="Stock ID" rules={[{ required: true }]}><InputNumber /></Form.Item>
-                    <Form.Item name="range" label="区间" rules={[{ required: true }]}><DatePicker.RangePicker /></Form.Item>
-                    <Button type="primary" htmlType="submit">运行</Button>
-                  </Form>
-                </Card>
+                <Space direction="vertical" size="large" className="w-full">
+                  <Card title="运行新回测">
+                    <Form layout="inline" onFinish={run} initialValues={{ stock_id: data?.stock_id ?? 1 }}>
+                      <Form.Item name="stock_id" label="Stock ID" rules={[{ required: true }]}><InputNumber /></Form.Item>
+                      <Form.Item name="range" label="区间" rules={[{ required: true }]}><DatePicker.RangePicker /></Form.Item>
+                      <Button type="primary" htmlType="submit">运行</Button>
+                    </Form>
+                  </Card>
+
+                  <Card title="该策略的历史回测记录">
+                    {backtests.length === 0 ? (
+                      <Empty description="该策略尚未运行过回测。选择区间接上方运行新回测。" />
+                    ) : (
+                      <Table<BacktestItem>
+                        rowKey="id"
+                        dataSource={backtests}
+                        pagination={false}
+                        onRow={(record) => ({ onClick: () => router.push(`/backtest/${record.id}`), className: "cursor-pointer" })}
+                        columns={[
+                          { title: "回测 ID", dataIndex: "id", render: (id) => <Button type="link" className="!p-0" onClick={(e) => { e.stopPropagation(); router.push(`/backtest/${id}`); }}>#{id}</Button> },
+                          { title: "状态", dataIndex: "status", render: (status) => {
+                            if (status === "completed") return <Tag color="green">已完成</Tag>;
+                            if (status === "failed") return <Tag color="red">失败</Tag>;
+                            return <Tag color="blue">运行中</Tag>;
+                          }},
+                          { title: "区间", render: (_, row) => `${row.start_date} 至 ${row.end_date}` },
+                          { title: "收益率", dataIndex: "total_return", render: formatPercent },
+                          { title: "最大回撤", dataIndex: "max_drawdown", render: formatPercent },
+                          { title: "Sharpe", dataIndex: "sharpe_ratio", render: (value) => value ?? "--" },
+                          { title: "交易数", dataIndex: "num_trades", render: formatInteger },
+                          { title: "创建时间", dataIndex: "created_at" },
+                        ]}
+                      />
+                    )}
+                  </Card>
+                </Space>
               ),
             },
             {
