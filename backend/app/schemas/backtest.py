@@ -21,6 +21,8 @@ class BacktestOut(BaseModel):
     user_id: int
     stock_id: int
     config_id: int
+    strategy_name: str | None = None
+    stock_symbol: str | None = None
     status: str
     start_date: date
     end_date: date

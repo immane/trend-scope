@@ -82,6 +82,13 @@ class BacktestService:
             for row in rows
         ]).set_index("date")
 
+    @staticmethod
+    def _clamp(value: float, precision: int = 6) -> Decimal:
+        """Clamp to safe range for DECIMAL(18,6).  Return 18-digit-6-scale Decimal."""
+        limit = 10 ** (18 - precision)
+        clamped = max(min(value, limit - Decimal("0.000001")), -limit + Decimal("0.000001"))
+        return Decimal(str(round(clamped, precision)))
+
     def _simulate(self, df: pd.DataFrame, signals: pd.Series, initial_capital: float, slippage_pct: float, commission_pct: float) -> dict:
         cash = initial_capital
         shares = 0.0
@@ -135,16 +142,16 @@ class BacktestService:
         max_drawdown = abs(float(drawdown.min()))
         benchmark_return = float(df["close"].iloc[-1] / df["close"].iloc[0] - 1)
         return {
-            "total_return": Decimal(str(round(total_return, 4))),
-            "cagr": Decimal(str(round(cagr, 4))),
-            "max_drawdown": Decimal(str(round(max_drawdown, 4))),
-            "sharpe_ratio": Decimal(str(round(float(sharpe), 4))),
-            "sortino_ratio": Decimal(str(round(float(sortino), 4))),
-            "calmar_ratio": Decimal(str(round(cagr / max_drawdown, 4))) if max_drawdown else Decimal("0"),
-            "win_rate": Decimal(str(round(wins / max(wins + losses, 1), 4))),
-            "profit_factor": Decimal(str(round(gross_profit / gross_loss, 4))) if gross_loss else Decimal("0"),
+            "total_return": self._clamp(total_return, 6),
+            "cagr": self._clamp(cagr, 6),
+            "max_drawdown": self._clamp(max_drawdown, 6),
+            "sharpe_ratio": self._clamp(float(sharpe), 6),
+            "sortino_ratio": self._clamp(float(sortino), 6),
+            "calmar_ratio": self._clamp(cagr / max_drawdown, 6) if max_drawdown else Decimal("0"),
+            "win_rate": self._clamp(wins / max(wins + losses, 1), 6),
+            "profit_factor": self._clamp(gross_profit / gross_loss, 6) if gross_loss else Decimal("0"),
             "num_trades": wins + losses,
-            "benchmark_return": Decimal(str(round(benchmark_return, 4))),
+            "benchmark_return": self._clamp(benchmark_return, 6),
             "equity_curve": {"points": equity},
             "drawdown_curve": {"points": [{"date": str(idx.date()), "value": round(float(value), 4)} for idx, value in drawdown.items()]},
             "monthly_returns": {str(k): round(float(v), 4) for k, v in returns.resample("ME").apply(lambda x: (1 + x).prod() - 1).items()},
