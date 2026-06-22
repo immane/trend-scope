@@ -1,12 +1,14 @@
 from datetime import date, timedelta
 from decimal import Decimal
 
+import math
 import pandas as pd
 import yfinance as yf
 from sqlalchemy import and_, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from app.core.config import settings
 from app.models.analysis import AnalysisSignal
 from app.models.stock import Stock, StockPriceDaily
 
@@ -16,7 +18,7 @@ class DataService:
         ticker = yf.Ticker(symbol)
         df = ticker.history(period=period, interval=interval, auto_adjust=True)
         if df.empty:
-            return df
+            return self._generate_dev_fallback(symbol, period=period) if settings.APP_ENV != "production" else df
         df.index = pd.to_datetime(df.index).date
         df.index.name = "Date"
         return df
@@ -38,7 +40,11 @@ class DataService:
         ticker = yf.Ticker(stock.symbol)
         df = ticker.history(start=start or "2010-01-01", auto_adjust=True)
         if df.empty:
-            return 0
+            if settings.APP_ENV == "production":
+                return 0
+            df = self._generate_dev_fallback(stock.symbol, start=start or date(2010, 1, 1))
+            if df.empty:
+                return 0
         df.index = pd.to_datetime(df.index).date
 
         new_count = 0
@@ -65,7 +71,7 @@ class DataService:
                     low=Decimal(str(round(float(row["Low"]), 4))),
                     close=Decimal(str(round(float(row["Close"]), 4))),
                     volume=int(row["Volume"]),
-                    data_source="yfinance",
+                    data_source="dev_fallback" if bool(row.get("_dev_fallback", False)) else "yfinance",
                 )
             )
             new_count += 1
@@ -160,3 +166,52 @@ class DataService:
     async def get_active_stocks(self, db: AsyncSession) -> list[Stock]:
         result = await db.execute(select(Stock).where(Stock.is_active.is_(True)).order_by(Stock.symbol))
         return list(result.scalars().all())
+
+    def _generate_dev_fallback(
+        self,
+        symbol: str,
+        start: date | str | None = None,
+        period: str = "2y",
+    ) -> pd.DataFrame:
+        """Generate deterministic local-dev OHLCV when public data providers are unavailable."""
+        end_ts = pd.Timestamp.today().normalize()
+        if start is None:
+            years = 2
+            if period.endswith("y") and period[:-1].isdigit():
+                years = int(period[:-1])
+            start_ts = end_ts - pd.DateOffset(years=years)
+        else:
+            start_ts = pd.Timestamp(start)
+        dates = pd.bdate_range(start=start_ts, end=end_ts)
+        if len(dates) == 0:
+            return pd.DataFrame(columns=["Open", "High", "Low", "Close", "Volume", "_dev_fallback"])
+
+        seed = sum(ord(char) for char in symbol.upper())
+        base = 25 + seed % 80
+        leverage = 3.0 if symbol.upper() in {"TQQQ", "SOXL"} else 1.0
+        rows = []
+        previous_close = float(base)
+        for idx, current_date in enumerate(dates):
+            trend = 1 + idx * (0.00055 * leverage)
+            cycle = math.sin(idx / 18 + seed) * (0.10 * leverage)
+            short_cycle = math.sin(idx / 5 + seed / 7) * (0.025 * leverage)
+            close = max(1.0, base * trend * (1 + cycle + short_cycle))
+            open_price = previous_close * (1 + math.sin(idx / 9 + seed) * 0.005)
+            high = max(open_price, close) * 1.015
+            low = min(open_price, close) * 0.985
+            volume = int(5_000_000 + (seed % 50) * 100_000 + abs(math.sin(idx / 11)) * 2_000_000)
+            rows.append(
+                {
+                    "Open": round(open_price, 4),
+                    "High": round(high, 4),
+                    "Low": round(low, 4),
+                    "Close": round(close, 4),
+                    "Volume": volume,
+                    "_dev_fallback": True,
+                }
+            )
+            previous_close = close
+        df = pd.DataFrame(rows, index=dates)
+        df.index = pd.to_datetime(df.index).date
+        df.index.name = "Date"
+        return df
