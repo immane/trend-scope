@@ -72,3 +72,19 @@ async def get_kline(
         period="day",
         data=[KlinePoint.model_validate(point) for point in data],
     )
+
+
+@router.get("/{stock_id}/quote", response_model=dict)
+async def get_rich_quote(
+    stock_id: int,
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user),
+):
+    result = await db.execute(select(Stock).where(Stock.id == stock_id, Stock.is_active.is_(True)))
+    stock = result.scalar_one_or_none()
+    if stock is None:
+        raise HTTPException(status_code=404, detail="Stock not found")
+    quote = await DataService().get_rich_quote(db, stock_id=stock.id)
+    if quote is None:
+        raise HTTPException(status_code=404, detail="Quote data not available")
+    return quote

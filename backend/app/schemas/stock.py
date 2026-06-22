@@ -19,8 +19,14 @@ class KlinePoint(BaseModel):
     low: float
     close: float
     volume: int
+    ma5: float | None = None
+    ma10: float | None = None
     ma20: float | None = None
     ma60: float | None = None
+    ma120: float | None = None
+    macd_dif: float | None = None
+    macd_dea: float | None = None
+    macd_hist: float | None = None
     rsi14: float | None = None
     signal: SignalPoint | None = None
 

@@ -95,6 +95,42 @@ async def delete_stock(
     return {"detail": "Stock deactivated", "code": "OK"}
 
 
+@router.get("/summaries", response_model=dict)
+async def list_stocks_with_prices(
+    page: int = Query(1, ge=1),
+    size: int = Query(20, ge=1, le=100),
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(get_admin_user),
+):
+    all_summaries = await DataService().get_stocks_with_price_summaries(db, limit=200)
+    total = len(all_summaries)
+    start = (page - 1) * size
+    items = all_summaries[start : start + size]
+    return {"items": items, "total": total, "page": page, "size": size, "pages": (total + size - 1) // size}
+
+
+@router.post("/sync-all", response_model=dict)
+async def sync_all_stocks(
+    _: User = Depends(get_admin_user),
+):
+    from app.core.deps import get_db_context
+
+    async with get_db_context() as db:
+        stocks = (await db.execute(select(Stock).where(Stock.is_active.is_(True)))).scalars().all()
+
+    results = []
+    total = 0
+    for stock in stocks:
+        try:
+            async with get_db_context() as db:
+                count = await DataService().sync_latest(db, stock.symbol)
+                results.append({"symbol": stock.symbol, "new_rows": count})
+                total += count
+        except Exception as exc:
+            results.append({"symbol": stock.symbol, "error": str(exc)})
+    return {"total_new_rows": total, "stocks_synced": len(stocks), "details": results}
+
+
 @router.post("/{stock_id}/sync", response_model=dict)
 async def sync_stock_prices(
     stock_id: int,
