@@ -1,7 +1,7 @@
 # Task 07 — Phase 1 Backtest System
 
 > **Estimated time**: 2-3 days
-> **Status**: Not started
+> **Status**: Completed ✅
 > **Depends On**: [Task 04 — 股票数据](04-phase-1-stock-data.md), [Task 05 — 策略引擎](05-phase-1-strategy-engine.md)
 > **Required By**: [Task 10 — 管理端前端](10-phase-1-admin-frontend.md)
 > **参考设计文档**:

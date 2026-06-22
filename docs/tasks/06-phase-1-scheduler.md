@@ -1,7 +1,7 @@
 # Task 06 — Phase 1 Scheduler
 
 > **Estimated time**: 1-2 days
-> **Status**: Not started
+> **Status**: Completed ✅
 > **Depends On**: [Task 04 — 股票数据](04-phase-1-stock-data.md), [Task 05 — 策略引擎](05-phase-1-strategy-engine.md)
 > **Required By**: [Task 08 — AI分析](08-phase-1-ai-analysis.md), [Task 09 — 提醒邮件](09-phase-1-alert-email.md)
 > **参考设计文档**:

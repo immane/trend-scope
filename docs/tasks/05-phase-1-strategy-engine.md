@@ -1,7 +1,7 @@
 # Task 05 — Phase 1 Strategy Engine
 
 > **Estimated time**: 3-4 days
-> **Status**: Not started
+> **Status**: Completed ✅
 > **Depends On**: [Task 03 — 认证系统](03-phase-1-auth.md), [Task 04 — 股票数据](04-phase-1-stock-data.md)
 > **Required By**: [Task 06 — 定时任务](06-phase-1-scheduler.md), [Task 07 — 回测系统](07-phase-1-backtest.md), [Task 08 — AI分析](08-phase-1-ai-analysis.md), [Task 09 — 提醒邮件](09-phase-1-alert-email.md)
 > **参考设计文档**:

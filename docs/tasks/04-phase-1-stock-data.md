@@ -1,6 +1,6 @@
 # Task 04: Phase 1 Stock Data — yfinance Integration, CRUD & K-line API
 
-> **Status**: Ready for Implementation
+> **Status**: Completed ✅
 > **Estimated Time**: 2-3 days
 > **Depends On**: [Task 02 — 数据库层](02-phase-1-database.md), [Task 03 — 认证系统](03-phase-1-auth.md)
 > **Required By**: [Task 05 — 策略引擎](05-phase-1-strategy-engine.md), [Task 07 — 回测系统](07-phase-1-backtest.md)

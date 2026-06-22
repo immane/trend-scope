@@ -1,5 +1,5 @@
 site_name: Trend-Scope
-site_description: 面向美股指数基金投资者的智能投资分析平台 — 设计文档
+site_description: 面向美股指数基金投资者的智能投资分析平台 — Phase 1 MVP 已完成 ✅
 site_author: Trend-Scope Team
 repo_url: https://github.com/immane/trend-scope
 repo_name: immane/trend-scope
@@ -74,8 +74,8 @@ nav:
       - AI 分析系统: design/008-ai-analysis-system.md
       - 指标插件系统: design/009-indicator-plugin-system.md
       - 部署指南: design/010-deployment-guide.md
-      - Phase 1 设计: design/phase-1.md
-      - Phase 2 规划: design/phase-2.md
+      - ✅ Phase 1 设计 (已完成): design/phase-1.md
+      - 📋 Phase 2 规划: design/phase-2.md
   - 技术研究:
       - 商业模式: research/001-business-model.md
       - 数据源: research/002-data-sources.md
@@ -86,16 +86,16 @@ nav:
       - 通知: research/007-notification.md
       - 订阅支付: research/008-subscription.md
       - AI 分析: research/009-ai-analysis.md
-  - 开发任务:
-      - 01 项目初始化: tasks/01-phase-1-project-init.md
-      - 02 数据库层: tasks/02-phase-1-database.md
-      - 03 认证系统: tasks/03-phase-1-auth.md
-      - 04 股票数据与K线: tasks/04-phase-1-stock-data.md
-      - 05 策略引擎: tasks/05-phase-1-strategy-engine.md
-      - 06 定时任务: tasks/06-phase-1-scheduler.md
-      - 07 回测系统: tasks/07-phase-1-backtest.md
-      - 08 AI 分析: tasks/08-phase-1-ai-analysis.md
-      - 09 提醒邮件: tasks/09-phase-1-alert-email.md
-      - 10 管理端前端: tasks/10-phase-1-admin-frontend.md
-      - 11 集成测试: tasks/11-phase-1-integration-test.md
+  - 开发任务 (全部已完成 ✅):
+      - ✅ 01 项目初始化: tasks/01-phase-1-project-init.md
+      - ✅ 02 数据库层: tasks/02-phase-1-database.md
+      - ✅ 03 认证系统: tasks/03-phase-1-auth.md
+      - ✅ 04 股票数据与K线: tasks/04-phase-1-stock-data.md
+      - ✅ 05 策略引擎: tasks/05-phase-1-strategy-engine.md
+      - ✅ 06 定时任务: tasks/06-phase-1-scheduler.md
+      - ✅ 07 回测系统: tasks/07-phase-1-backtest.md
+      - ✅ 08 AI 分析: tasks/08-phase-1-ai-analysis.md
+      - ✅ 09 提醒邮件: tasks/09-phase-1-alert-email.md
+      - ✅ 10 管理端前端: tasks/10-phase-1-admin-frontend.md
+      - ✅ 11 集成测试: tasks/11-phase-1-integration-test.md
   - AI 上下文: ai/context.md
