@@ -29,16 +29,47 @@ def _sma_or_ema(close: pd.Series, window: int, ma_type: str) -> pd.Series:
 
 
 def generate_signals(df: pd.DataFrame, config) -> pd.Series:
+    return pd.Series(generate_strategy_frame(df, config)["signal"], index=df.index, dtype="int64")
+
+
+def generate_strategy_frame(df: pd.DataFrame, config) -> pd.DataFrame:
     strategy_type = _strategy_type(config)
     if df.empty:
-        return pd.Series(dtype="int64", index=df.index)
+        return _normalize_strategy_output(pd.Series(dtype="int64", index=df.index), df.index)
     if strategy_type == "ma_cross":
-        return _generate_ma_cross(df, config)
+        return _normalize_strategy_output(_generate_ma_cross(df, config), df.index)
     if strategy_type == "multi_indicator":
-        return _generate_multi_indicator(df, config)
+        return _normalize_strategy_output(_generate_multi_indicator(df, config), df.index)
     if strategy_type == "custom_script":
-        return _generate_custom_script(df, config)
+        return _normalize_strategy_output(_generate_custom_script(df, config), df.index)
     raise ValueError(f"Unknown strategy_type: {strategy_type}")
+
+
+def _normalize_strategy_output(output: pd.Series | pd.DataFrame, index: pd.Index) -> pd.DataFrame:
+    if isinstance(output, pd.Series):
+        frame = pd.DataFrame({"signal": output.reindex(index)})
+    else:
+        frame = output.reindex(index).copy()
+        if "signal" not in frame.columns:
+            frame["signal"] = 0
+
+    signal = pd.Series(pd.to_numeric(frame["signal"], errors="coerce"), index=index)
+    frame["signal"] = signal.fillna(0).astype(float).clip(-1, 1)
+    frame["signal"] = frame["signal"].round().astype(int)
+
+    if "target_position" in frame.columns:
+        target = pd.Series(pd.to_numeric(frame["target_position"], errors="coerce"), index=index)
+        frame["target_position"] = target.astype(float).clip(-1, 1)
+
+    if "confidence" in frame.columns:
+        confidence = pd.Series(pd.to_numeric(frame["confidence"], errors="coerce"), index=index)
+        frame["confidence"] = confidence.astype(float).clip(0, 1)
+
+    for column in ["reason", "ai_context"]:
+        if column in frame.columns:
+            frame[column] = frame[column].where(frame[column].notna(), None)
+
+    return frame
 
 
 def _generate_ma_cross(df: pd.DataFrame, config) -> pd.Series:
@@ -91,9 +122,17 @@ def _generate_multi_indicator(df: pd.DataFrame, config) -> pd.Series:
     return signals.shift(1).fillna(0).astype(int)
 
 
-def _generate_custom_script(df: pd.DataFrame, config) -> pd.Series:
+def _generate_custom_script(df: pd.DataFrame, config) -> pd.Series | pd.DataFrame:
     output = ScriptExecutor().run(getattr(config, "script_content", None) or "", df, _params(config, "script_params"))
-    return output.reindex(df.index).fillna(0).astype(int).clip(-1, 1)
+    return output
+
+
+def _json_safe(value):
+    if pd.isna(value):
+        return None
+    if hasattr(value, "item"):
+        value = value.item()
+    return value
 
 
 class SignalEngine:
@@ -107,11 +146,22 @@ class SignalEngine:
             df = await self._load_prices(item.id)
             if len(df) < 2:
                 continue
-            series = generate_signals(df, config)
-            last_signal = int(series.iloc[-1])
+            frame = generate_strategy_frame(df, config)
+            last_row = frame.iloc[-1]
+            last_signal = int(last_row.get("signal", 0) or 0)
+            if last_signal == 0 and "target_position" in frame.columns and len(frame) > 1:
+                current_target = last_row.get("target_position")
+                previous_target = frame["target_position"].ffill().fillna(0).iloc[-2]
+                if pd.notna(current_target):
+                    delta = float(current_target) - float(previous_target)
+                    last_signal = 1 if delta > 0 else -1 if delta < 0 else 0
             if last_signal == 0:
                 continue
             triggered_date = df.index[-1]
+            details = {"strategy_type": _strategy_type(config)}
+            for column in ["target_position", "confidence", "reason", "ai_context"]:
+                if column in frame.columns:
+                    details[column] = _json_safe(last_row.get(column))
             existing = await self.db.execute(
                 select(AnalysisSignal).where(
                     and_(
@@ -130,9 +180,9 @@ class SignalEngine:
                 signal_type="buy" if last_signal > 0 else "sell",
                 signal_subtype=_strategy_type(config),
                 strength="normal",
-                confidence=Decimal("0.700"),
+                confidence=Decimal(str(round(float(last_row.get("confidence", 0.7) or 0.7), 3))) if "confidence" in frame.columns else Decimal("0.700"),
                 trigger_price=Decimal(str(round(float(df.iloc[-1]["close"]), 4))),
-                trigger_details={"strategy_type": _strategy_type(config)},
+                trigger_details=details,
                 triggered_date=triggered_date,
                 is_active=True,
             )
@@ -150,11 +200,18 @@ class SignalEngine:
 
     async def test_run(self, config: AnalysisConfig, stock_id: int, limit: int = 100) -> list[dict]:
         df = await self._load_prices(stock_id, limit=limit)
-        series = generate_signals(df, config)
+        frame = generate_strategy_frame(df, config)
         return [
-            {"date": str(idx), "signal": int(value), "close": float(df.loc[idx, "close"])}
-            for idx, value in series.items()
-            if int(value) != 0
+            {
+                "date": str(idx),
+                "signal": int(row.get("signal", 0) or 0),
+                "target_position": _json_safe(row.get("target_position")) if "target_position" in frame.columns else None,
+                "confidence": _json_safe(row.get("confidence")) if "confidence" in frame.columns else None,
+                "reason": _json_safe(row.get("reason")) if "reason" in frame.columns else None,
+                "close": float(df.loc[idx, "close"]),
+            }
+            for idx, row in frame.iterrows()
+            if int(row.get("signal", 0) or 0) != 0 or ("target_position" in frame.columns and pd.notna(row.get("target_position")))
         ]
 
     async def _stocks_for_config(self, config: AnalysisConfig) -> list[Stock]:

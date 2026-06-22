@@ -4,6 +4,7 @@ from types import SimpleNamespace
 
 import pandas as pd
 
+from app.services.analysis_engine import generate_strategy_frame
 from app.services.analysis_engine import generate_signals
 from app.services.backtest_service import BacktestService
 
@@ -72,3 +73,49 @@ def test_ma_cross_signals_are_delayed_to_next_bar_to_avoid_lookahead():
     signals = generate_signals(df, config)
 
     assert signals.tolist() == [0, 0, 0, 0, 0, 1]
+
+
+def test_custom_script_can_return_structured_strategy_frame():
+    df = make_price_frame([100.0, 105.0, 110.0])
+    script = """
+def analyze(df, params):
+    output = pd.DataFrame(index=df.index)
+    output["target_position"] = [0.0, 0.5, 1.0]
+    output["signal"] = [0, 1, 1]
+    output["confidence"] = [0.0, 0.65, 0.8]
+    output["reason"] = [None, "half allocation", "full allocation"]
+    output["ai_context"] = [None, "momentum improving", "breakout confirmed"]
+    return output
+"""
+    config = SimpleNamespace(strategy_type="custom_script", script_content=script, script_params={})
+
+    frame = generate_strategy_frame(df, config)
+
+    assert frame["signal"].tolist() == [0, 1, 1]
+    assert frame["target_position"].tolist() == [0.0, 0.5, 1.0]
+    assert frame["confidence"].tolist() == [0.0, 0.65, 0.8]
+    assert frame["reason"].iloc[-1] == "full allocation"
+    assert frame["ai_context"].iloc[-1] == "breakout confirmed"
+
+
+def test_backtest_target_position_rebalances_fractional_exposure():
+    df = make_price_frame([100.0, 100.0, 120.0])
+    frame = pd.DataFrame(
+        {
+            "target_position": [0.0, 0.5, 0.5],
+            "confidence": [0.0, 0.7, 0.7],
+            "reason": [None, "risk budget half", "hold half"],
+        },
+        index=df.index,
+    )
+
+    metrics = backtest_service()._simulate(df, frame, initial_capital=1000.0, slippage_pct=0.0, commission_pct=0.0)
+
+    assert metrics["equity_curve"]["points"][-1]["value"] == 1100.0
+    assert metrics["total_return"] == Decimal("0.100000")
+    assert metrics["num_trades"] == 2
+    assert metrics["trade_log"]["trades"][0]["target_position"] == 0.5
+    assert metrics["trade_log"]["trades"][0]["confidence"] == 0.7
+    assert metrics["trade_log"]["trades"][0]["reason"] == "risk budget half"
+    assert metrics["trade_log"]["trades"][1]["side"] == "sell"
+    assert metrics["trade_log"]["trades"][1]["reason"] == "hold half"
