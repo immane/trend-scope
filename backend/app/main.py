@@ -6,11 +6,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1.router import api_router
 from app.core.config import settings
 from app.core.exceptions import register_exception_handlers
+from app.scheduler import start_scheduler, stop_scheduler
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    yield
+    if settings.APP_ENV != "test":
+        start_scheduler()
+    try:
+        yield
+    finally:
+        if settings.APP_ENV != "test":
+            stop_scheduler()
 
 
 app = FastAPI(
