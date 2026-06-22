@@ -83,38 +83,48 @@ class BacktestService:
         ]).set_index("date")
 
     @staticmethod
-    def _clamp(value: float, precision: int = 6) -> Decimal:
+    def _clamp(value: float | Decimal, precision: int = 6) -> Decimal:
         """Clamp to safe range for DECIMAL(18,6).  Return 18-digit-6-scale Decimal."""
-        limit = 10 ** (18 - precision)
-        clamped = max(min(value, limit - Decimal("0.000001")), -limit + Decimal("0.000001"))
-        return Decimal(str(round(clamped, precision)))
+        step = Decimal(1).scaleb(-precision)
+        limit = Decimal(10) ** (18 - precision)
+        max_value = limit - step
+        decimal_value = Decimal(str(value))
+        if not decimal_value.is_finite():
+            decimal_value = -max_value if decimal_value.is_signed() else max_value
+        clamped = max(min(decimal_value, max_value), -max_value)
+        return clamped.quantize(step)
 
     def _simulate(self, df: pd.DataFrame, signals: pd.Series, initial_capital: float, slippage_pct: float, commission_pct: float) -> dict:
         cash = initial_capital
         shares = 0.0
-        entry_value = 0.0
+        entry_cost = 0.0
         wins = 0
         losses = 0
         gross_profit = 0.0
         gross_loss = 0.0
         trades = []
         equity = []
+        equity_values = []
         for current_date, row in df.iterrows():
             price = float(row["close"])
             signal = int(signals.loc[current_date]) if current_date in signals.index else 0
             if signal > 0 and shares == 0:
                 fill = price * (1 + slippage_pct)
-                shares = cash / fill
-                commission = cash * commission_pct
-                cash -= commission
-                entry_value = cash
-                trades.append({"date": str(current_date), "side": "buy", "price": round(fill, 4)})
+                if fill <= 0:
+                    raise ValueError("Invalid buy fill price")
+                shares = cash / (fill * (1 + commission_pct))
+                notional = shares * fill
+                commission = notional * commission_pct
+                entry_cost = notional + commission
+                cash -= entry_cost
+                trades.append({"date": str(current_date), "side": "buy", "price": round(fill, 4), "commission": round(commission, 2)})
             elif signal < 0 and shares > 0:
                 fill = price * (1 - slippage_pct)
-                value = shares * fill
-                commission = value * commission_pct
-                cash = value - commission
-                pnl = cash - entry_value
+                notional = shares * fill
+                commission = notional * commission_pct
+                proceeds = notional - commission
+                pnl = proceeds - entry_cost
+                cash += proceeds
                 if pnl >= 0:
                     wins += 1
                     gross_profit += pnl
@@ -122,12 +132,14 @@ class BacktestService:
                     losses += 1
                     gross_loss += abs(pnl)
                 shares = 0.0
-                trades.append({"date": str(current_date), "side": "sell", "price": round(fill, 4), "pnl": round(pnl, 2)})
-            equity_value = cash if shares == 0 else shares * price
+                entry_cost = 0.0
+                trades.append({"date": str(current_date), "side": "sell", "price": round(fill, 4), "commission": round(commission, 2), "pnl": round(pnl, 2)})
+            equity_value = cash + shares * price
+            equity_values.append(equity_value)
             equity.append({"date": str(current_date), "value": round(equity_value, 2)})
 
-        final_value = equity[-1]["value"]
-        values = pd.Series([point["value"] for point in equity], index=pd.to_datetime([point["date"] for point in equity]))
+        final_value = equity_values[-1]
+        values = pd.Series(equity_values, index=pd.to_datetime([point["date"] for point in equity]))
         returns = values.pct_change().fillna(0)
         running_max = values.cummax()
         drawdown = (values / running_max - 1).fillna(0)
@@ -149,7 +161,7 @@ class BacktestService:
             "sortino_ratio": self._clamp(float(sortino), 6),
             "calmar_ratio": self._clamp(cagr / max_drawdown, 6) if max_drawdown else Decimal("0"),
             "win_rate": self._clamp(wins / max(wins + losses, 1), 6),
-            "profit_factor": self._clamp(gross_profit / gross_loss, 6) if gross_loss else Decimal("0"),
+            "profit_factor": self._clamp(gross_profit / gross_loss, 6) if gross_loss else (self._clamp(Decimal("Infinity"), 6) if gross_profit > 0 else Decimal("0")),
             "num_trades": wins + losses,
             "benchmark_return": self._clamp(benchmark_return, 6),
             "equity_curve": {"points": equity},
