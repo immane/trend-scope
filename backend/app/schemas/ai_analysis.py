@@ -18,3 +18,18 @@ class AIAnalysisOut(BaseModel):
     generated_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class AIConfigUpdate(BaseModel):
+    api_key: str | None = None
+    base_url: str | None = None
+    model: str | None = None
+    enabled: bool | None = None
+
+
+class AIConfigOut(BaseModel):
+    api_key: str
+    base_url: str
+    model: str
+    enabled: bool
+    configured: bool

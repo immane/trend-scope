@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 
+from app.api.v1.admin.ai_config import router as ai_config_router
 from app.api.v1.admin.alerts import router as alerts_router
 from app.api.v1.admin.announcements import router as announcements_router
 from app.api.v1.admin.backtest import router as backtest_router
@@ -12,6 +13,7 @@ from app.api.v1.admin.strategies import router as strategies_router
 from app.api.v1.admin.users import router as users_router
 
 admin_router = APIRouter()
+admin_router.include_router(ai_config_router)
 admin_router.include_router(alerts_router)
 admin_router.include_router(announcements_router)
 admin_router.include_router(backtest_router)
