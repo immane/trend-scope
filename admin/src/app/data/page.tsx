@@ -8,6 +8,7 @@ import AdminShell from "@/components/layout/AdminShell";
 import AuthGuard from "@/components/layout/AuthGuard";
 import apiClient from "@/lib/api";
 import { formatInteger } from "@/lib/format";
+import { dateDesc, sortByDateDesc } from "@/lib/sort";
 import type { PaginatedResponse } from "@/types/api";
 
 interface PriceDataItem {
@@ -100,13 +101,13 @@ export default function DataManagementPage() {
 
         <Table<PriceDataItem>
           rowKey="stock_id"
-          dataSource={data?.items ?? []}
+          dataSource={sortByDateDesc(data?.items ?? [], (item) => item.latest_date)}
           pagination={{ current: page, pageSize, total: data?.total ?? 0, showSizeChanger: true, showTotal: (total) => `共 ${total} 个标的`, onChange: (nextPage, nextSize) => { setPage(nextPage); setPageSize(nextSize); } }}
           columns={[
             { title: "标的", dataIndex: "symbol", render: (value, record) => <Space><strong>{value}</strong><Typography.Text type="secondary">{record.stock_name}</Typography.Text></Space> },
             { title: "数据行数", dataIndex: "total_rows", render: (value) => formatInteger(value), sorter: (a, b) => a.total_rows - b.total_rows },
-            { title: "最早日期", dataIndex: "earliest_date", render: (value) => value ?? "--" },
-            { title: "最近日期", dataIndex: "latest_date", render: (value) => value ?? "--" },
+            { title: "最早日期", dataIndex: "earliest_date", render: (value) => value ?? "--", sorter: (a, b) => -dateDesc(a.earliest_date, b.earliest_date) },
+            { title: "最近日期", dataIndex: "latest_date", render: (value) => value ?? "--", defaultSortOrder: "descend", sorter: (a, b) => -dateDesc(a.latest_date, b.latest_date) },
             { title: "数据源", dataIndex: "data_source", render: sourceTag },
             {
               title: "操作",

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import AdminShell from "@/components/layout/AdminShell";
 import AuthGuard from "@/components/layout/AuthGuard";
 import apiClient from "@/lib/api";
+import { dateDesc, sortByDateDesc } from "@/lib/sort";
 import type { AlertLog, BacktestItem, PaginatedResponse } from "@/types/api";
 
 interface UserDetail {
@@ -90,23 +91,23 @@ export default function UserDetailPage({ params }: { params: { id: string } }) {
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={12}>
           <Card title={<span><MailOutlined className="mr-2" />最近提醒 ({alerts?.total ?? 0})</span>}>
-            <Table<AlertLog> rowKey="id" size="small" dataSource={alerts?.items ?? []} pagination={false}
+            <Table<AlertLog> rowKey="id" size="small" dataSource={sortByDateDesc(alerts?.items ?? [], (item) => item.sent_at)} pagination={false}
               columns={[
                 { title: "ID", dataIndex: "id" },
                 { title: "信号", dataIndex: "signal_id" },
                 { title: "状态", dataIndex: "status", render: (v) => <Tag color={v === "sent" ? "green" : "red"}>{v === "sent" ? "已发送" : "失败"}</Tag> },
-                { title: "时间", dataIndex: "sent_at" },
+                { title: "时间", dataIndex: "sent_at", defaultSortOrder: "descend", sorter: (a, b) => -dateDesc(a.sent_at, b.sent_at) },
               ]}
             />
           </Card>
         </Col>
         <Col xs={24} lg={12}>
           <Card title="最近回测">
-            <Table<BacktestItem> rowKey="id" size="small" dataSource={(backtests?.items ?? []).filter(b => b.user_id === Number(params.id)).slice(0, 10)} pagination={false}
+            <Table<BacktestItem> rowKey="id" size="small" dataSource={sortByDateDesc((backtests?.items ?? []).filter(b => b.user_id === Number(params.id)), (item) => item.created_at).slice(0, 10)} pagination={false}
               columns={[
                 { title: "ID", dataIndex: "id" },
                 { title: "状态", dataIndex: "status", render: (v) => <Tag color={v === "completed" ? "green" : "red"}>{v === "completed" ? "已完成" : "失败"}</Tag> },
-                { title: "时间", dataIndex: "created_at" },
+                { title: "时间", dataIndex: "created_at", defaultSortOrder: "descend", sorter: (a, b) => -dateDesc(a.created_at, b.created_at) },
               ]}
             />
           </Card>

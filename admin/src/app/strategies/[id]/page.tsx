@@ -9,6 +9,7 @@ import AuthGuard from "@/components/layout/AuthGuard";
 import StrategyCodeEditor, { DEFAULT_STRATEGY_SCRIPT, STRATEGY_TEMPLATES, getStrategyTemplate } from "@/components/strategy/StrategyCodeEditor";
 import apiClient from "@/lib/api";
 import { formatInteger, formatPercent } from "@/lib/format";
+import { dateDesc, sortByDateDesc } from "@/lib/sort";
 import type { BacktestItem, PaginatedResponse, Strategy } from "@/types/api";
 
 interface StrategyEditValues {
@@ -162,7 +163,7 @@ export default function StrategyDetailPage({ params }: { params: { id: string } 
                     ) : (
                       <Table<BacktestItem>
                         rowKey="id"
-                        dataSource={backtests}
+                        dataSource={sortByDateDesc(backtests, (item) => item.created_at)}
                         pagination={false}
                         onRow={(record) => ({ onClick: () => router.push(`/backtest/${record.id}`), className: "cursor-pointer" })}
                         columns={[
@@ -177,7 +178,7 @@ export default function StrategyDetailPage({ params }: { params: { id: string } 
                           { title: "最大回撤", dataIndex: "max_drawdown", render: formatPercent },
                           { title: "Sharpe", dataIndex: "sharpe_ratio", render: (value) => value ?? "--" },
                           { title: "交易数", dataIndex: "num_trades", render: formatInteger },
-                          { title: "创建时间", dataIndex: "created_at" },
+                          { title: "创建时间", dataIndex: "created_at", defaultSortOrder: "descend", sorter: (a, b) => -dateDesc(a.created_at, b.created_at) },
                         ]}
                       />
                     )}

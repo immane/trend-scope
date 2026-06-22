@@ -7,6 +7,7 @@ import { useState } from "react";
 import AdminShell from "@/components/layout/AdminShell";
 import AuthGuard from "@/components/layout/AuthGuard";
 import apiClient from "@/lib/api";
+import { dateDesc, sortByDateDesc } from "@/lib/sort";
 import type { PaginatedResponse } from "@/types/api";
 
 interface AnnouncementItem {
@@ -66,14 +67,14 @@ export default function AnnouncementsPage() {
         </Card>
       )}
 
-      <Table<AnnouncementItem> rowKey="id" dataSource={data?.items ?? []}
+      <Table<AnnouncementItem> rowKey="id" dataSource={sortByDateDesc(data?.items ?? [], (item) => item.created_at)}
         pagination={{ current: page, pageSize: 20, total: data?.total ?? 0, showTotal: (t) => `共 ${t} 条`, onChange: (p) => setPage(p) }}
         columns={[
           { title: "ID", dataIndex: "id", width: 60 },
           { title: "标题", dataIndex: "title", render: (v, r) => <Space>{r.is_pinned && <PushpinOutlined className="text-red-500" />}<strong>{v}</strong></Space> },
           { title: "发布", dataIndex: "is_published", render: (v, r) => <Switch checked={v} onChange={(checked) => toggle(r.id, "is_published", checked)} /> },
           { title: "置顶", dataIndex: "is_pinned", render: (v, r) => <Switch checked={v} onChange={(checked) => toggle(r.id, "is_pinned", checked)} /> },
-          { title: "创建时间", dataIndex: "created_at" },
+          { title: "创建时间", dataIndex: "created_at", defaultSortOrder: "descend", sorter: (a, b) => -dateDesc(a.created_at, b.created_at) },
           { title: "操作", render: (_, r) => (
             <Space size="small">
               <Button size="small" onClick={() => startEdit(r)}>编辑</Button>

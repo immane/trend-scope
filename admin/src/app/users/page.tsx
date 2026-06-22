@@ -8,6 +8,7 @@ import { useState } from "react";
 import AdminShell from "@/components/layout/AdminShell";
 import AuthGuard from "@/components/layout/AuthGuard";
 import apiClient from "@/lib/api";
+import { dateDesc, sortByDateDesc } from "@/lib/sort";
 import type { PaginatedResponse } from "@/types/api";
 
 interface UserItem {
@@ -57,7 +58,7 @@ export default function UsersPage() {
 
       <Table<UserItem>
         rowKey="id"
-        dataSource={data?.items ?? []}
+        dataSource={sortByDateDesc(data?.items ?? [], (item) => item.last_login_at ?? item.created_at)}
         pagination={{ current: page, pageSize, total: data?.total ?? 0, showTotal: (total) => `共 ${total} 人`, onChange: (nextPage) => setPage(nextPage) }}
         onRow={(record) => ({ onClick: () => router.push(`/users/${record.id}`), className: "cursor-pointer" })}
         columns={[
@@ -70,7 +71,7 @@ export default function UsersPage() {
             if (value === "inactive") return <Tag color="orange">禁用</Tag>;
             return <Tag color="red">封禁</Tag>;
           }},
-          { title: "最近登录", dataIndex: "last_login_at", render: (v) => v ?? "从未登录" },
+          { title: "最近登录", dataIndex: "last_login_at", render: (v) => v ?? "从未登录", defaultSortOrder: "descend", sorter: (a, b) => -dateDesc(a.last_login_at ?? a.created_at, b.last_login_at ?? b.created_at) },
           {
             title: "快速操作",
             render: (_, record) => (

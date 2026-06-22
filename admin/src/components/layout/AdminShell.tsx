@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChartOutlined, BellOutlined, CloseOutlined, CloudDownloadOutlined, DashboardOutlined, ExperimentOutlined, LineChartOutlined, LogoutOutlined, MenuFoldOutlined, MenuOutlined, MenuUnfoldOutlined, NotificationOutlined, StockOutlined, ThunderboltOutlined, UserOutlined } from "@ant-design/icons";
+import { BarChartOutlined, BellOutlined, CloseOutlined, CloudDownloadOutlined, DashboardOutlined, ExperimentOutlined, LineChartOutlined, LogoutOutlined, MenuFoldOutlined, MenuOutlined, MenuUnfoldOutlined, NotificationOutlined, RobotOutlined, StockOutlined, ThunderboltOutlined, UserOutlined } from "@ant-design/icons";
 import { Menu, Button, Typography, Space, Tag, Grid } from "antd";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
@@ -17,6 +17,7 @@ const items = [
   { key: "/users", icon: <UserOutlined />, label: "用户管理" },
   { key: "/announcements", icon: <NotificationOutlined />, label: "内容管理" },
   { key: "/data", icon: <CloudDownloadOutlined />, label: "数据管理" },
+  { key: "/ai-config", icon: <RobotOutlined />, label: "AI 设置" },
 ];
 
 export default function AdminShell({ children }: { children: ReactNode }) {
