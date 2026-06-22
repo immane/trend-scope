@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChartOutlined, BellOutlined, CloudDownloadOutlined, DashboardOutlined, ExperimentOutlined, LineChartOutlined, LogoutOutlined, StockOutlined, ThunderboltOutlined, UserOutlined } from "@ant-design/icons";
+import { BarChartOutlined, BellOutlined, CloudDownloadOutlined, DashboardOutlined, ExperimentOutlined, LineChartOutlined, LogoutOutlined, NotificationOutlined, StockOutlined, ThunderboltOutlined, UserOutlined } from "@ant-design/icons";
 import { Menu, Button, Typography, Space, Tag } from "antd";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
@@ -15,6 +15,7 @@ const items = [
   { key: "/alerts", icon: <BellOutlined />, label: "提醒日志" },
   { key: "/rules", icon: <BellOutlined />, label: "提醒规则" },
   { key: "/users", icon: <UserOutlined />, label: "用户管理" },
+  { key: "/announcements", icon: <NotificationOutlined />, label: "内容管理" },
   { key: "/data", icon: <CloudDownloadOutlined />, label: "数据管理" },
 ];
 
