@@ -1,13 +1,34 @@
+"use client";
+
+import { Button, Card, Form, Input, Typography, message } from "antd";
+import { useRouter } from "next/navigation";
+import apiClient from "@/lib/api";
+
 export default function LoginPage() {
+  const router = useRouter();
+
+  async function onFinish(values: { email: string; password: string }) {
+    try {
+      const { data } = await apiClient.post("/auth/login", values);
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("refresh_token", data.refresh_token);
+      router.push("/dashboard");
+    } catch {
+      message.error("登录失败，请检查账号密码");
+    }
+  }
+
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
-      <section className="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
-        <p className="text-sm font-medium text-blue-600">Trend-Scope</p>
-        <h1 className="mt-2 text-2xl font-semibold text-slate-950">管理端登录</h1>
-        <p className="mt-3 text-sm leading-6 text-slate-600">
-          认证 API 将在 Phase 1 T3 接入。当前页面用于验证 Admin 应用路由、样式和运行时环境。
-        </p>
-      </section>
+    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6">
+      <Card className="w-full max-w-md shadow-2xl">
+        <Typography.Title level={3}>Trend-Scope 管理端</Typography.Title>
+        <Typography.Paragraph type="secondary">使用管理员账号登录后配置标的、策略、回测和提醒。</Typography.Paragraph>
+        <Form layout="vertical" onFinish={onFinish} initialValues={{ email: "admin@trend-scope.com" }}>
+          <Form.Item name="email" label="邮箱" rules={[{ required: true, type: "email" }]}><Input /></Form.Item>
+          <Form.Item name="password" label="密码" rules={[{ required: true }]}><Input.Password /></Form.Item>
+          <Button type="primary" htmlType="submit" block>登录</Button>
+        </Form>
+      </Card>
     </main>
   );
 }
