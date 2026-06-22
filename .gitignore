@@ -1,16 +1,25 @@
 # Python
 __pycache__/
 *.py[cod]
+*$py.class
+*.so
 *.egg-info/
 dist/
 build/
+.eggs/
+*.egg
 .venv/
 venv/
+env/
+env.bak/
+venv.bak/
+pythonenv*
 
 # Node
 node_modules/
 .next/
 out/
+.nuxt/
 
 # Environment
 .env
@@ -19,6 +28,9 @@ out/
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
 
 # OS
 .DS_Store
@@ -32,3 +44,18 @@ site/
 
 # Docker
 docker-compose.override.yml
+mysql_data/
+redis_data/
+
+# Alembic
+backend/alembic/versions/*.pyc
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Logs
+*.log
+logs/

@@ -1125,36 +1125,36 @@ Admin UI                          Backend API                       Database
 
 ### T1: 项目初始化与基础设施 (2-3 天)
 
-- [ ] T1.1: 创建项目目录结构 (`backend/`, `admin/`)
-- [ ] T1.2: Docker Compose 配置 (MySQL + Redis + backend + admin)
-- [ ] T1.3: `.env.example` + 环境变量配置
-- [ ] T1.4: `backend/requirements.txt` + 虚拟环境
-- [ ] T1.5: FastAPI app 骨架 (`main.py`, 基础 middleware)
-- [ ] T1.6: `admin/` Next.js 项目初始化 (`create-next-app`, Ant Design, Tailwind)
+- [x] T1.1: 创建项目目录结构 (`backend/`, `admin/`)
+- [x] T1.2: Docker Compose 配置 (MySQL + Redis + backend + admin)
+- [x] T1.3: `.env.example` + 环境变量配置
+- [x] T1.4: `backend/requirements.txt` + 虚拟环境
+- [x] T1.5: FastAPI app 骨架 (`main.py`, 基础 middleware)
+- [x] T1.6: `admin/` Next.js 项目初始化 (`create-next-app`, Ant Design, Tailwind)
 
 ### T2: 数据库层 (2-3 天)
 
-- [ ] T2.1: SQLAlchemy Base + TimestampMixin
-- [ ] T2.2: ORM 模型: `user.py`, `stock.py`, `analysis.py`, `backtest.py`, `ai_analysis.py`, `alert.py`
-- [ ] T2.3: Alembic 初始化 + 首次迁移 (创建全部 13 张表) ★
-- [ ] T2.4: 种子数据: admin 用户 + 10 只主流 ETF
+- [x] T2.1: SQLAlchemy Base + TimestampMixin
+- [x] T2.2: ORM 模型: `user.py`, `stock.py`, `analysis.py`, `backtest.py`, `ai_analysis.py`, `alert.py`
+- [x] T2.3: Alembic 初始化 + 首次迁移 (创建全部 13 张表) ★
+- [x] T2.4: 种子数据: admin 用户 + 10 只主流 ETF
 
 ### T3: 认证系统 (2-3 天)
 
-- [ ] T3.1: JWT 工具函数 (`core/security.py`)
-- [ ] T3.2: 依赖注入 (`core/deps.py`)
-- [ ] T3.3: Auth API (register/login/refresh)
-- [ ] T3.4: User API (GET/PATCH /users/me)
-- [ ] T3.5: Pydantic schemas + 异常处理
-- [ ] T3.6: pytest: auth 全流程测试
+- [x] T3.1: JWT 工具函数 (`core/security.py`)
+- [x] T3.2: 依赖注入 (`core/deps.py`)
+- [x] T3.3: Auth API (register/login/refresh)
+- [x] T3.4: User API (GET/PATCH /users/me)
+- [x] T3.5: Pydantic schemas + 异常处理
+- [x] T3.6: pytest: auth 全流程测试
 
 ### T4: 数据层 — 股票与 K 线 (2-3 天)
 
-- [ ] T4.1: `DataService`: yfinance fetch_historical + sync_latest + get_kline
-- [ ] T4.2: Stock API: GET /stocks, /stocks/{id}, /stocks/{id}/kline
-- [ ] T4.3: Admin Stock API: CRUD
-- [ ] T4.4: Pydantic schemas: stock.py
-- [ ] T4.5: pytest: 数据同步 + K 线查询
+- [x] T4.1: `DataService`: yfinance fetch_historical + sync_latest + get_kline
+- [x] T4.2: Stock API: GET /stocks, /stocks/{id}, /stocks/{id}/kline
+- [x] T4.3: Admin Stock API: CRUD
+- [x] T4.4: Pydantic schemas: stock.py
+- [x] T4.5: pytest: 数据同步 + K 线查询
 
 ### T5: 策略系统 (3-4 天)
 
