@@ -176,6 +176,23 @@ def test_fetch_historical_uses_yfinance(monkeypatch: pytest.MonkeyPatch):
     assert str(df.index[0]) == "2024-01-02"
 
 
+def test_fetch_historical_uses_dev_fallback_when_yfinance_empty(monkeypatch: pytest.MonkeyPatch):
+    class FakeTicker:
+        def __init__(self, symbol: str):
+            self.symbol = symbol
+
+        def history(self, period: str, interval: str, auto_adjust: bool):
+            return pd.DataFrame()
+
+    monkeypatch.setattr("app.services.stock_data.yf.Ticker", FakeTicker)
+
+    df = DataService().fetch_historical("TQQQ", period="1y")
+
+    assert not df.empty
+    assert df.index.name == "Date"
+    assert bool(df.iloc[-1]["_dev_fallback"]) is True
+
+
 @pytest.mark.asyncio
 async def test_sync_latest_inserts_only_new_rows(monkeypatch: pytest.MonkeyPatch):
     symbol = f"S{uuid4().hex[:6]}".upper()

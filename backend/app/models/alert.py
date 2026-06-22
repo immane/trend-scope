@@ -3,10 +3,12 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import BigInteger, Boolean, DateTime, Enum, ForeignKey, Index, String, Text, UniqueConstraint, func
+from sqlalchemy import BigInteger as _BigInteger, Boolean, DateTime, Enum, ForeignKey, Index, Integer, String, Text, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base, TimestampMixin
+
+BigInteger = _BigInteger().with_variant(Integer, "sqlite")
 
 if TYPE_CHECKING:
     from app.models.analysis import AnalysisSignal
