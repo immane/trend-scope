@@ -18,6 +18,23 @@ export interface Stock {
   updated_at: string;
 }
 
+export interface StockSummary {
+  id: number;
+  symbol: string;
+  name: string;
+  type: string;
+  market: string;
+  sector?: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  latest_price: number | null;
+  previous_close: number | null;
+  change_pct: number | null;
+  sparkline: number[];
+  latest_date?: string | null;
+}
+
 export interface Strategy {
   id: number;
   stock_id?: number | null;
@@ -50,6 +67,8 @@ export interface BacktestItem {
   user_id?: number;
   stock_id: number;
   config_id: number;
+  strategy_name?: string | null;
+  stock_symbol?: string | null;
   status: string;
   start_date?: string;
   end_date?: string;
