@@ -1,7 +1,7 @@
 # Trend-Scope — AI Session Context
 
-> **Date**: 2026-06-09  
-> **Session**: ses-20260609-001  
+> **Date**: 2026-06-22
+> **Session**: ses-20260622-001
 > **Purpose**: 保存当前 AI 会话的完整上下文，以便后续会话快速恢复。
 
 ---
@@ -16,97 +16,134 @@
 
 ## 当前阶段
 
-**Phase 1 MVP (设计完成，待实现)**
+**Phase 1 MVP (已完成 ✅)**
 
-Phase 1 包含:
-1. 后端 FastAPI (认证、数据同步、策略引擎、回测、AI分析、邮件)
-2. 管理端 Next.js 14 (Dashboard、标的管理/K线、策略管理/自定义脚本、回测面板、信号查看、提醒日志)
-3. 用户 API (注册/登录、K线查询、信号查询、AI分析、提醒管理)
-4. 13 张数据库表 (MySQL 8.0)
-5. 4 个 APScheduler 定时任务 (数据同步→信号扫描→AI分析→提醒分发)
-6. 3 种策略类型 (MA均线交叉、多指标综合、自定义Python脚本)
-7. 回测系统 (vectorbt, 10项指标, SPY基准对比)
+Phase 1 已实现:
+1. 后端 FastAPI (认证、数据同步、策略引擎、回测、AI分析、邮件) ✅
+2. 管理端 Next.js 14 (Dashboard、标的管理+K线图表、策略管理+代码编辑器、回测详情+对比、信号查看、提醒日志、数据管理) ✅
+3. 用户 API (注册/登录、K线查询、信号查询、AI分析、提醒管理) ✅
+4. 10 张核心数据库表 (MySQL 8.0) + Alembic 迁移 ✅
+5. 4 个 APScheduler 定时任务 (数据同步→信号扫描→AI分析→提醒分发) ✅
+6. 11 种策略模板 (均以 Python 可编辑脚本执行) ✅
+7. 回测系统 (10项指标、权益曲线、回撤曲线、月度收益、交易日志) ✅
+8. 真实 K线图表 (lightweight-charts v5，蜡烛图+MA+成交量+MACD，多时间周期) ✅
+9. 回测多策略对比 (归一化收益曲线叠加、指标对比表) ✅
+10. 数据管理 (标的价格数据概况、删除、批量同步) ✅
+11. 24 个自动化测试 (SQLite 测试库，无需 MySQL) ✅
+12. Docker Compose 一键部署 (自动迁移+种子数据) ✅
 
-## 文档结构
+## 实际技术栈与设计文档差异
 
-```
-docs/
-├── design/                          # 架构设计文档
-│   ├── 001-preliminary-design.md    # 总体架构 v2 (研究后更新)
-│   ├── 002-database-schema.md       # 完整 26 表 DDL
-│   ├── 003-api-specification.md     # 55+ API 完整规格
-│   ├── 004-analysis-engine.md       # 三层分析引擎设计
-│   ├── 005-payment-subscription.md  # 支付订阅设计 (Phase 2)
-│   ├── 006-notification-system.md   # 通知系统设计
-│   ├── 007-backtest-system.md       # 回测系统设计
-│   ├── 008-ai-analysis-system.md    # AI 分析系统设计
-│   ├── 009-indicator-plugin-system.md # 指标插件系统 (Phase 2)
-│   ├── 010-deployment-guide.md      # 部署指南
-│   ├── phase-1.md                   # Phase 1 MVP 完整详细设计 (v1.1)
-│   └── phase-2.md                   # Phase 2 功能规划
-├── research/                        # 技术研究文档
-│   ├── 001-business-model.md        # 商业模式与定价
-│   ├── 002-data-sources.md          # 数据源选型 (免费+付费)
-│   ├── 003-charting.md              # K线图表方案 (TradingView LWC)
-│   ├── 004-indicator-system.md      # 指标计算与插件系统
-│   ├── 005-analysis-engine.md       # 量化分析与 AI 方法
-│   ├── 006-backtest.md              # 回测框架对比
-│   ├── 007-notification.md          # 通知服务选型
-│   ├── 008-subscription.md          # 支付与订阅 (Stripe/支付宝/微信)
-│   └── 009-ai-analysis.md           # AI 内容生成 (LLM选型/Prompt/安全)
-├── tasks/                           # 模块化开发任务
-│   ├── 01-phase-1-project-init.md   # T1 项目初始化
-│   ├── 02-phase-1-database.md       # T2 数据库层
-│   ├── 03-phase-1-auth.md           # T3 认证系统
-│   ├── 04-phase-1-stock-data.md     # T4 股票与K线
-│   ├── 05-phase-1-strategy-engine.md # T5 策略引擎
-│   ├── 06-phase-1-scheduler.md      # T6 定时任务
-│   ├── 07-phase-1-backtest.md       # T7 回测系统
-│   ├── 08-phase-1-ai-analysis.md    # T8 AI分析
-│   ├── 09-phase-1-alert-email.md    # T9 提醒邮件
-│   ├── 10-phase-1-admin-frontend.md  # T10 管理端前端
-│   └── 11-phase-1-integration-test.md # T11 集成测试
-├── sessions/
-│   └── session-2026-06-09.json      # 本次会话记录
-├── ai/
-│   └── context.md                   # 本文件
-└── README.md                        # 项目总览 (给用户/合作方)
-```
-
-## 关键技术决策
-
-| 决策 | 选择 | 理由 |
+| 设计文档 | 实际实现 | 原因 |
 |---|---|---|
-| 后端框架 | FastAPI 0.115+ | 异步、自动OpenAPI、WebSocket |
-| 数据库 | MySQL 8.0 + Redis 7 | 按用户要求 |
-| 数据源 | yfinance (主) + Finnhub (备用) | 免费优先 |
-| AI 模型 | DeepSeek V4-Flash | $0.00043/次, OpenAI兼容, 中文优秀 |
-| 回测引擎 | vectorbt 1.0+ | 矢量化快速, NumPy加速 |
-| 脚本沙箱 | RestrictedPython | 白名单+超时, 轻量 |
-| 前端图表 | TradingView LWC 5.2 | Apache 2.0 免费商用 |
-| 邮件 | Resend | $20/月 50k封, API简洁 |
+| vectorbt 回测引擎 | 自研 BacktestService (pandas 模拟) | vectorbt 依赖重，自研更可控 |
+| RestrictedPython 沙箱 | AST 手动校验 + `exec()` 白名单 | 更简单可靠 |
+| 3 种策略类型分离 | 统一为 `custom_script` Python 脚本 | 所有模板生成 Python 代码，编辑所见即所得 |
+| yfinance 行情源 | Yahoo chart API 直连 + yfinance 兜底 + dev fallback | yfinance 在容器内被限流，API 直连可用 |
+| 4 张 Phase 1 表 | 10 张 (users, user_sessions, stocks, stock_prices_daily, analysis_configs, analysis_signals, backtest_results, ai_analysis_results, alert_rules, alert_logs) | 实际需要完整业务闭环 |
 
-## Phase 1 实施依赖顺序
+## 当前后端文件结构
 
 ```
-T1 (项目初始化)
-  → T2 (数据库层)
-    → T3 (认证系统)
-      → T4 (股票与K线)
-        → T5 (策略引擎)
-          → T6 (定时任务)
-          → T7 (回测系统) [并行于 T5 完成]
-            → T8 (AI分析) [依赖 T6 的调度触发]
-              → T9 (提醒邮件)
-                → T10 (管理端前端) [依赖全部后端 API]
-                  → T11 (集成测试)
+backend/app/
+├── api/v1/
+│   ├── auth.py              # 注册/登录/刷新 JWT
+│   ├── users.py             # 用户资料 CRUD
+│   ├── stocks.py            # 股票查询、K线、富报价
+│   ├── analysis.py          # 信号查询、AI分析
+│   ├── backtest.py          # 回测运行/历史
+│   ├── alerts.py            # 提醒规则 CRUD
+│   ├── router.py            # API 路由注册
+│   └── admin/
+│       ├── __init__.py
+│       ├── stocks.py         # 标的管理CRUD、sync-all、summaries
+│       ├── strategies.py     # 策略CRUD、校验、试运行
+│       ├── signals.py        # 信号列表
+│       ├── backtest.py       # 回测列表/详情(含策略名)
+│       ├── dashboard.py      # 统计+调度状态+手动触发
+│       ├── alerts.py         # 提醒日志
+│       └── price_data.py     # 价格数据管理
+├── core/
+│   ├── config.py             # Pydantic Settings
+│   ├── deps.py               # get_db, get_current_user, get_admin_user
+│   ├── security.py           # JWT + bcrypt
+│   └── exceptions.py         # 全局异常处理
+├── models/
+│   ├── base.py               # Base, TimestampMixin
+│   ├── user.py               # User, UserSession
+│   ├── stock.py              # Stock, StockPriceDaily
+│   ├── analysis.py           # AnalysisConfig, AnalysisSignal
+│   ├── backtest.py           # BacktestResult (DECIMAL(18,6))
+│   ├── ai_analysis.py        # AIAnalysisResult
+│   └── alert.py              # AlertRule, AlertLog
+├── services/
+│   ├── stock_data.py         # DataService: yfinance+API直连+dev_fallback+富报价
+│   ├── analysis_engine.py    # SignalEngine: generate_signals()+扫描
+│   ├── script_executor.py    # AST校验+沙箱执行
+│   ├── backtest_service.py   # 自研回测引擎
+│   ├── ai_analysis_service.py # DeepSeek+fallback模板
+│   ├── email_service.py      # Resend邮件
+│   └── alert_service.py      # 信号→规则匹配→邮件派发+去重
+├── scheduler/
+│   ├── jobs.py               # 4个定时Job函数
+│   └── runner.py             # APScheduler生命周期
+├── schemas/                  # Pydantic 请求/响应模型
+└── tests/                    # 24个测试(SQLite backend)
 ```
 
-> **注意**: T7 (回测) 和 T8 (AI分析) 可以与 T5 部分并行开发（因为它们有自己的服务类），但它们依赖 T5 的 `generate_signals()` 函数作为信号生成的单一来源。
+## 当前 Admin 前端页面 (16 routes)
 
-## 后续会话建议
+| Route | 功能 |
+|---|---|
+| `/login` | JWT 登录，token 持久化 |
+| `/dashboard` | 统计卡片 + 调度状态 + 最近回测 |
+| `/stocks` | 标的管理 (现价/涨跌/走势图/同步/编辑/删除) |
+| `/stocks/create` | 新增标的 |
+| `/stocks/[id]` | 详情: 富报价信息 + TradingView K线图(蜡烛+MA+量+MACD) + 52周区间 + 各周期收益 |
+| `/strategies` | 策略管理 (启用开关/分页) |
+| `/strategies/create` | 创建策略 (11模板+Monaco代码编辑器) |
+| `/strategies/[id]` | 策略详情 (编辑代码/参数/回测历史) |
+| `/backtest` | 回测历史 (分页/多选对比/策略名) |
+| `/backtest/[id]` | 回测详情 (完整的权益曲线+回撤曲线+月度收益+交易明细+风险指标) |
+| `/backtest/compare?ids=` | 回测对比 (多线归一化收益+回撤+指标排序表) |
+| `/signals` | 信号列表 + AI 生成按钮 |
+| `/alerts` | 提醒日志 |
+| `/data` | 数据管理 (标的价格数据概况/删除/单标同步) |
 
-1. 按 tasks/ 文件顺序执行 T1-T11
-2. 每完成一个 Task 更新 phase-1.md 的勾选状态
-3. Phase 1 完成后评估是否启动 Phase 2 (支付/会员/ML/指标插件)
-4. 数据源稳定性监控 — yfinance 若不稳定则切换 Finnhub
+## 数据库表与关系
+
+```
+User ─── UserSession
+  │
+  ├── AlertRule ── AlertLog
+  ├── BacktestResult (config_id → AnalysisConfig)
+  │
+Stock ─── StockPriceDaily
+  │
+  ├── AnalysisConfig (策略定义，含 custom_script)
+  │
+  └── AnalysisSignal
+       └── AIAnalysisResult (1:1, unique)
+```
+
+## 关键技术决策更新
+
+| 决策 | 当前选择 | 说明 |
+|---|---|---|
+| 数据源 | Yahoo chart v8 API 直连 | yfinance 在 Docker 容器被限流，直连 API 正常 |
+| 开发环境 | 非 production 自动降级到 dev_fallback 合成数据 | 本地离线也可开发和回测 |
+| 测试 | SQLite + 模型 BigInteger→Integer variant | 不依赖 MySQL |
+| 回测 | 自研 BacktestService (pandas模拟) | DECIMAL(18,6) 列防溢出 |
+| 图表 | lightweight-charts v5 | 多面板(蜡烛+量+MACD)，priceScaleId 分离标尺 |
+| 策略 | 11 种内置模板，均以 Python 脚本保存和编辑 | MA/EMA/RSI/MACD/Bollinger/Donchian/Momentum/Z-Score/Volume/Trend+RSI/Buy&Hold |
+| 侧边栏 | 原生 flex 布局，非 AntD Layout | 修复高度自适应和底部状态栏 |
+| 数值格式化 | 共享 `format.ts` (千位分隔符) | formatMoney/formatPercent/formatInteger/formatRatio |
+
+## 待后续会话处理
+
+1. 真实数据覆盖量不足：当前每个标的仅约 2 年日线 (500 行)，需要更长时间跨度
+2. 前端 TradingView LWC 图表尚未完全替代（当前使用 lightweight-charts）
+3. Phase 2 准备：支付/会员/ML/指标插件
+4. 生产环境部署 (当前仅 Docker Compose 本地开发)
+5. CI/CD pipeline
+6. 前端单元测试 / E2E 测试
