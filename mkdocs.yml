@@ -98,4 +98,14 @@ nav:
       - ✅ 09 提醒邮件: tasks/09-phase-1-alert-email.md
       - ✅ 10 管理端前端: tasks/10-phase-1-admin-frontend.md
       - ✅ 11 集成测试: tasks/11-phase-1-integration-test.md
+  - Phase 2 开发任务 (规划中 📋):
+      - 📋 12 平台加固: tasks/12-phase-2-platform-hardening.md
+      - 📋 13 回测增强: tasks/13-phase-2-backtest-enhancement.md
+      - 📋 14 策略生态: tasks/14-phase-2-strategy-ecosystem.md
+      - 📋 15 支付与会员: tasks/15-phase-2-payment-membership.md
+      - 📋 16 通知增强: tasks/16-phase-2-notification-enhancement.md
+      - 📋 17 用户端应用: tasks/17-phase-2-user-facing.md
+      - 📋 18 指标插件: tasks/18-phase-2-indicator-plugin.md
+      - 📋 19 ML 增强: tasks/19-phase-2-ml-enhancement.md
+      - 📋 20 AI 增强: tasks/20-phase-2-ai-enhancement.md
   - AI 上下文: ai/context.md
